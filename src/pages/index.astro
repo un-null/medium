@@ -1,4 +1,6 @@
 ---
+import RootLayout from "../layouts/RootLayout.astro";
+
 
 ---
 
@@ -10,7 +12,7 @@
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro</title>
 	</head>
-	<body class="bg-[#191919]">
-		<h1 class="text-notion-red">Astro</h1>
-	</body>
+	<RootLayout>
+		<h1 class="text-notion-tag-red">Astro</h1>
+	</RootLayout>
 </html>
