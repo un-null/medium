@@ -24,6 +24,11 @@ dependencies:
     specifier: ^5.4.3
     version: 5.4.3
 
+devDependencies:
+  client:
+    specifier: link:@types/@notionhq/client
+    version: link:@types/@notionhq/client
+
 packages:
 
   /@alloc/quick-lru@5.2.0:
