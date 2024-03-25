@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        "notion-text": "rgba(255,255,255,0.9)",
         "notion-tag-red": "rgba(255,115,105,0.5)",
         "notion-tag-blue": "rgba(82,156,202,0.5)",
         "notion-tag-green": "rgba(77,171,154,0.5)",

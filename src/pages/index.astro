@@ -17,8 +17,6 @@ const articles = await getArticles()
 		<title>Astro</title>
 	</head>
 	<RootLayout>
-		<h1 class="text-3xl">Astro</h1>
-
 		<ul class="flex space-y-8 flex-col">
 			{articles.map((article => (
 				<li class="flex gap-4">
