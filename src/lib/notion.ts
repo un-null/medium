@@ -1,10 +1,5 @@
 import { Client } from "@notionhq/client";
-import type {
-  BlockObjectResponse,
-  PartialBlockObjectResponse,
-} from "@notionhq/client/build/src/api-endpoints";
-
-import { Paragraph } from "~/components/blocks/paragraph";
+import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 type FilterdArticlesData = {
   id: string;
