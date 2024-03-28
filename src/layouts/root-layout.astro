@@ -1,0 +1,23 @@
+---
+import "~/styles/globals.css";
+
+import BottomNav from "~/components/layouts/bottom-nav.astro";
+
+// const { title } = Astro.props;
+---
+
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body
+    class="font-notion text-notion-text grid-rows-layout relative mx-auto grid min-h-[100dvh] w-full max-w-screen-md bg-[#191919] py-4"
+  >
+    <header class="grid place-items-center text-lg font-bold">Medium</header>
+    <main class="my-10">
+      <slot />
+    </main>
+    <BottomNav />
+  </body>
+</html>

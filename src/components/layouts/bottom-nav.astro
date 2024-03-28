@@ -1,0 +1,41 @@
+---
+import { Card } from "../ui/card";
+import { LucideIcon } from "../layouts/lucide-icon";
+
+const pathname = new URL(Astro.request.url).pathname;
+
+const navItems = [
+  {
+    href: "/",
+    icon: "home",
+  },
+  {
+    href: "/article",
+    icon: "article",
+  },
+  {
+    href: "/works",
+    icon: "work",
+  },
+  {
+    href: "/vlog",
+    icon: "vlog",
+  },
+  {
+    href: "/contact",
+    icon: "contact",
+  },
+];
+---
+
+<nav class="text-notion-tag-gray sticky bottom-8 mx-auto">
+  <Card className="border-zink-8 flex space-x-6 rounded-full px-6 py-3">
+    {
+      navItems.map((item) => (
+        <a href={item.href}>
+          <LucideIcon type={item.icon} isActive={pathname === item.href} />
+        </a>
+      ))
+    }
+  </Card>
+</nav>

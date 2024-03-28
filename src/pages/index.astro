@@ -1,9 +1,20 @@
 ---
-import RootLayout from "~/layouts/RootLayout.astro";
-import { Button } from "~/components/ui/button";
+import RootLayout from "~/layouts/root-layout.astro";
+import { BlockToJSX } from "~/components/blocks/block-to-jsx";
+
+import { getHome } from "~/lib/notion";
+
+const blocks = await getHome();
 ---
 
 <RootLayout>
-  <h1 class="text-notion-tag-green">Home</h1>
-  <Button>Hello</Button>
+  <!-- <Card
+    className="mx-auto grid aspect-square w-[75%] max-w-sm place-content-center border-zinc-600 bg-[#191919]"
+  >
+    ...
+  </Card> -->
+
+  <ul class="mx-auto px-4 text-sm text-zinc-200 sm:text-base">
+    {blocks.map((block) => <BlockToJSX block={block} />)}
+  </ul>
 </RootLayout>

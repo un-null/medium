@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 type FilterdArticlesData = {
   id: string;
@@ -125,4 +126,13 @@ export const getVlogs = async () => {
   });
 
   return filterdVlogsData;
+};
+
+export const getHome = async () => {
+  const page = import.meta.env.NOTION_HOME_PAGE_ID;
+
+  const results = (await notion.blocks.children.list({ block_id: page }))
+    .results;
+
+  return results.filter((d) => "type" in d) as BlockObjectResponse[];
 };
