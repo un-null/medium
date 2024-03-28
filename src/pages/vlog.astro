@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import RootLayout from "../layouts/RootLayout.astro";
-import { getVlogs } from "../lib/notion";
+import RootLayout from "~/layouts/RootLayout.astro";
+import { getVlogs } from "~/lib/notion";
 
 const vlogs = await getVlogs();
 ---
