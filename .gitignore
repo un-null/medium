@@ -20,3 +20,6 @@ src/type/env.d.ts
 
 # macOS-specific files
 .DS_Store
+
+# vscode
+.vscode
