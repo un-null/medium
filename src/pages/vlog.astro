@@ -1,23 +1,26 @@
 ---
 import { Image } from "astro:assets";
-import RootLayout from "../layouts/RootLayout.astro";
-import { getVlogs } from "../lib/notion";
+import RootLayout from "~/layouts/RootLayout.astro";
+import { getVlogs } from "~/lib/notion";
 
-const vlogs = await getVlogs()
-
+const vlogs = await getVlogs();
 ---
 
 <RootLayout>
-    <ul class="flex space-y-8 flex-col">
-        {vlogs.map((vlog => (
-            <li class="flex gap-4">
-                <a href={`/article/${vlog.id}`}>{vlog.title}</a>
-                {vlog.url && 
-                    <a href={vlog.url} target="_blank" rel="noopener noreferrer">リンク</a>
-                }
-                <p>{vlog.name}</p>
-                <Image src={vlog.avatar} width={24} height={24} alt={vlog.name} />
-            </li>
-        )))}
-    </ul>
+  <ul class="flex flex-col space-y-8">
+    {
+      vlogs.map((vlog) => (
+        <li class="flex gap-4">
+          <a href={`/article/${vlog.id}`}>{vlog.title}</a>
+          {vlog.url && (
+            <a href={vlog.url} target="_blank" rel="noopener noreferrer">
+              リンク
+            </a>
+          )}
+          <p>{vlog.name}</p>
+          <Image src={vlog.avatar} width={24} height={24} alt={vlog.name} />
+        </li>
+      ))
+    }
+  </ul>
 </RootLayout>

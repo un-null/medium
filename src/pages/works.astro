@@ -1,20 +1,21 @@
 ---
 import { Image } from "astro:assets";
-import RootLayout from "../layouts/RootLayout.astro";
-import { getWorks } from "../lib/notion";
+import RootLayout from "~/layouts/RootLayout.astro";
+import { getWorks } from "~/lib/notion";
 
-const works = await getWorks()
-
+const works = await getWorks();
 ---
 
 <RootLayout>
-    <ul class="flex space-y-8 flex-col">
-        {works.map((work => (
-            <li class="flex gap-4">
-                <a href={`/article/${work.id}`}>{work.title}</a>
-                <p>{work.name}</p>
-                <Image src={work.avatar} width={24} height={24} alt={work.name} />
-            </li>
-        )))}
-    </ul>
+  <ul class="flex flex-col space-y-8">
+    {
+      works.map((work) => (
+        <li class="flex gap-4">
+          <a href={`/article/${work.id}`}>{work.title}</a>
+          <p>{work.name}</p>
+          <Image src={work.avatar} width={24} height={24} alt={work.name} />
+        </li>
+      ))
+    }
+  </ul>
 </RootLayout>

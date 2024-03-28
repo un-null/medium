@@ -1,0 +1,11 @@
+node_modules/
+.astro/
+dist/
+public/
+package.json
+pmpn-lock.yaml
+astro.config.js
+tsconfig.json
+src/env.d.ts
+*.cjs
+*.mjs
