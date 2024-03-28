@@ -28,11 +28,11 @@ const navItems = [
 ];
 ---
 
-<nav class="text-notion-tag-gray sticky bottom-16 mx-auto">
-  <Card className="border-zink-8 flex space-x-4   rounded-full px-6 py-3">
+<nav class="text-notion-tag-gray sticky bottom-8 mx-auto">
+  <Card className="border-zink-8 flex space-x-6 rounded-full px-6 py-3">
     {
       navItems.map((item) => (
-        <a href={item.href} class="px-1">
+        <a href={item.href}>
           <LucideIcon type={item.icon} isActive={pathname === item.href} />
         </a>
       ))

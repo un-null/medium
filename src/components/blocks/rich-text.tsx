@@ -7,7 +7,7 @@ export const RichText = ({ text }: { text: RichTextItemResponse[] }) => {
         <span className="block h-6" />
       ) : (
         <>
-          {text.map((textItem, index: number) => {
+          {text.map((textItem, _: number) => {
             return textItem.plain_text;
           })}
         </>

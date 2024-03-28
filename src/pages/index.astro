@@ -14,7 +14,7 @@ const blocks = await getHome();
     ...
   </Card> -->
 
-  <ul class="mx-auto max-w-screen-sm px-4 text-sm text-zinc-200 sm:text-base">
+  <ul class="mx-auto px-4 text-sm text-zinc-200 sm:text-base">
     {blocks.map((block) => <BlockToJSX block={block} />)}
   </ul>
 </RootLayout>
