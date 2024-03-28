@@ -1,9 +1,12 @@
 ---
 import RootLayout from "~/layouts/root-layout.astro";
-import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
 ---
 
 <RootLayout>
-  <h1 class="text-notion-tag-green">Home</h1>
-  <Button>Hello</Button>
+  <Card
+    className="mx-auto grid aspect-square w-[75%] max-w-sm place-content-center border-zinc-600 bg-[#191919]"
+  >
+    ...
+  </Card>
 </RootLayout>
