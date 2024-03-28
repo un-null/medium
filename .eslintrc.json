@@ -1,0 +1,8 @@
+{
+  "extends": ["plugin:astro/recommended", "prettier"],
+  "plugins": ["unused-imports"],
+  "rules": {
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": ["error"]
+  }
+}
