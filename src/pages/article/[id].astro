@@ -28,8 +28,8 @@ const article = articles.find((article) => article.id === id);
 const blocks = await getArticlePageById(id);
 ---
 
-<RootLayout>
-  <a href="/article" class="block px-4">
+<RootLayout title={article?.title}>
+  <a href="/article/" class="block px-4">
     <LucideIcon type={"back"} />
   </a>
   <div class="grid place-items-center gap-4 px-4">

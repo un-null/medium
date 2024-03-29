@@ -6,7 +6,7 @@ import { getVlogs } from "~/lib/notion";
 const vlogs = await getVlogs();
 ---
 
-<RootLayout>
+<RootLayout title="Vlog">
   <ul class="flex flex-col space-y-8">
     {
       vlogs.map((vlog) => (

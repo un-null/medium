@@ -6,7 +6,7 @@ import { getWorks } from "~/lib/notion";
 const works = await getWorks();
 ---
 
-<RootLayout>
+<RootLayout title="Works">
   <ul class="flex flex-col space-y-8">
     {
       works.map((work) => (
