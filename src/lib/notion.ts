@@ -30,7 +30,17 @@ export const notion = new Client({
 export const getArticles = async () => {
   const db = import.meta.env.NOTION_ARTICLE_DATABASE_ID;
 
-  const results = (await notion.databases.query({ database_id: db })).results;
+  const results = (
+    await notion.databases.query({
+      database_id: db,
+      filter: {
+        property: "ステータス",
+        select: {
+          equals: "公開済",
+        },
+      },
+    })
+  ).results;
 
   // Fix using reduce ???
   let filterdArticleData: FilterdArticlesData = [];
@@ -133,6 +143,16 @@ export const getHome = async () => {
 
   const results = (await notion.blocks.children.list({ block_id: page }))
     .results;
+
+  return results.filter((d) => "type" in d) as BlockObjectResponse[];
+};
+
+export const getArticlePageById = async (id: string) => {
+  const results = (
+    await notion.blocks.children.list({
+      block_id: id,
+    })
+  ).results;
 
   return results.filter((d) => "type" in d) as BlockObjectResponse[];
 };

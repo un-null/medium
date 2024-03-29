@@ -1,0 +1,53 @@
+---
+import { Image } from "astro:assets";
+import { BlockToJSX } from "~/components/blocks/block-to-jsx";
+import { LucideIcon } from "~/components/layouts/lucide-icon";
+import RootLayout from "~/layouts/root-layout.astro";
+import { getArticlePageById } from "~/lib/notion";
+import { getArticles } from "~/lib/notion";
+
+export const getStaticPaths = async () => {
+  const articles = await getArticles();
+  return articles.map((article) => {
+    return {
+      params: {
+        id: article.id,
+      },
+      props: {
+        articles,
+      },
+    };
+  });
+};
+
+const { id } = Astro.params;
+const { articles } = Astro.props;
+
+const article = articles.find((article) => article.id === id);
+
+const blocks = await getArticlePageById(id);
+---
+
+<RootLayout>
+  <a href="/article" class="block px-4">
+    <LucideIcon type={"back"} />
+  </a>
+  <div class="grid place-items-center gap-4 px-4">
+    <h1 class="px-4 text-xl font-bold">{article?.title}</h1>
+    <div
+      class="flex items-center justify-center space-x-2 text-sm text-zinc-500"
+    >
+      <p>編纂員: {article?.name}</p>
+      <Image
+        src={article?.avatar!}
+        width={20}
+        height={20}
+        alt={article?.name}
+        class="rounded-full"
+      />
+    </div>
+  </div>
+  <ul class="mx-auto mt-10 px-4 text-sm text-zinc-200 sm:text-base">
+    {blocks.map((block) => <BlockToJSX block={block} />)}
+  </ul>
+</RootLayout>
