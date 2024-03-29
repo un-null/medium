@@ -2,7 +2,7 @@
 import { Card } from "../ui/card";
 import { LucideIcon } from "../layouts/lucide-icon";
 
-const pathname = new URL(Astro.request.url).pathname;
+const active = Astro.url.pathname;
 
 const navItems = [
   {
@@ -10,19 +10,19 @@ const navItems = [
     icon: "home",
   },
   {
-    href: "/article",
+    href: "/article/",
     icon: "article",
   },
   {
-    href: "/works",
+    href: "/works/",
     icon: "work",
   },
   {
-    href: "/vlog",
+    href: "/vlog/",
     icon: "vlog",
   },
   {
-    href: "/contact",
+    href: "/contact/",
     icon: "contact",
   },
 ];
@@ -33,7 +33,7 @@ const navItems = [
     {
       navItems.map((item) => (
         <a href={item.href}>
-          <LucideIcon type={item.icon} isActive={pathname === item.href} />
+          <LucideIcon type={item.icon} isActive={active === item.href} />
         </a>
       ))
     }
