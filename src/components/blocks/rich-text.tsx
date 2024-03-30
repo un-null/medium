@@ -2,7 +2,7 @@ import type { RichTextItemResponse } from "@notionhq/client/build/src/api-endpoi
 
 export const RichText = ({ text }: { text: RichTextItemResponse[] }) => {
   return (
-    <p className="inline whitespace-pre-wrap break-words leading-loose">
+    <p className="inline whitespace-pre-wrap break-words leading-loose text-zinc-300">
       {text.length === 0 ? (
         <span className="block h-6" />
       ) : (
