@@ -4,8 +4,8 @@ import { RichText } from "./rich-text";
 export const Paragraph = ({ block }: { block: BlockObjectResponse }) => {
   const text = "paragraph" in block ? block.paragraph.rich_text : [];
   return (
-    <div>
+    <p>
       <RichText text={text} />
-    </div>
+    </p>
   );
 };

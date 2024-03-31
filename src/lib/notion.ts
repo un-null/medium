@@ -8,12 +8,7 @@ type FilterdArticlesData = {
   avatar: string;
 }[];
 
-type FilterdWorksData = {
-  id: string;
-  title: string[];
-  name: string;
-  avatar: string;
-}[];
+type FilterdWorksData = FilterdArticlesData;
 
 type FilterdVlogData = {
   id: string;
@@ -72,7 +67,17 @@ export const getArticles = async () => {
 export const getWorks = async () => {
   const db = import.meta.env.NOTION_WORK_DATABASE_ID;
 
-  const results = (await notion.databases.query({ database_id: db })).results;
+  const results = (
+    await notion.databases.query({
+      database_id: db,
+      filter: {
+        property: "ステータス",
+        select: {
+          equals: "公開済",
+        },
+      },
+    })
+  ).results;
 
   // Fix using reduce ???
   let filterdWorksData: FilterdWorksData = [];
@@ -104,7 +109,17 @@ export const getWorks = async () => {
 export const getVlogs = async () => {
   const db = import.meta.env.NOTION_VLOG_DATABASE_ID;
 
-  const results = (await notion.databases.query({ database_id: db })).results;
+  const results = (
+    await notion.databases.query({
+      database_id: db,
+      filter: {
+        property: "ステータス",
+        select: {
+          equals: "公開済",
+        },
+      },
+    })
+  ).results;
 
   // Fix using reduce ???
   let filterdVlogsData: FilterdVlogData = [];
