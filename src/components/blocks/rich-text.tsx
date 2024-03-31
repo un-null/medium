@@ -7,7 +7,20 @@ export const RichText = ({ text }: { text: RichTextItemResponse[] }) => {
         <span className="block h-6" />
       ) : (
         <>
-          {text.map((textItem, _: number) => {
+          {text.map((textItem, index: number) => {
+            if (textItem.href) {
+              return (
+                <a
+                  key={index}
+                  href={textItem.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-zinc-400 underline underline-offset-1 hover:text-zinc-200"
+                >
+                  {textItem.plain_text}
+                </a>
+              );
+            }
             return textItem.plain_text;
           })}
         </>
