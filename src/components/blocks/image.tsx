@@ -11,7 +11,7 @@ export const Image = ({ block }: { block: ImageBlockObjectResponse }) => {
       src={src}
       alt={caption}
       loading="lazy"
-      className="h-auto w-[300px] border-zinc-500 sm:w-auto"
+      className="mx-auto h-auto w-[300px] border-zinc-500 sm:w-auto"
     />
   );
 };
