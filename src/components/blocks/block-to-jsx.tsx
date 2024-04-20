@@ -2,6 +2,7 @@ import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoin
 import { Paragraph } from "./paragraph";
 import { Heading } from "./heading";
 import { BulletedList } from "./bulleted-list";
+import { Image } from "./image";
 
 export const BlockToJSX = ({ block }: { block: BlockObjectResponse }) => {
   const blockType = block.type;
@@ -17,6 +18,9 @@ export const BlockToJSX = ({ block }: { block: BlockObjectResponse }) => {
           <BulletedList block={block} />
         </ul>
       );
+    case "image":
+      return <Image block={block} />;
+
     default:
       return <></>;
   }

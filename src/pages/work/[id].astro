@@ -3,29 +3,30 @@ import { Image } from "astro:assets";
 import { BlockToJSX } from "~/components/blocks/block-to-jsx";
 import { LucideIcon } from "~/components/layouts/lucide-icon";
 import RootLayout from "~/layouts/root-layout.astro";
-import { getPageById } from "~/lib/notion";
-import { getArticles } from "~/lib/notion";
+import { getPageById, getWorks } from "~/lib/notion";
 
 export const getStaticPaths = async () => {
-  const articles = await getArticles();
-  return articles.map((article) => {
+  const works = await getWorks();
+  return works.map((work) => {
     return {
       params: {
-        id: article.id,
+        id: work.id,
       },
       props: {
-        articles,
+        works,
       },
     };
   });
 };
 
 const { id } = Astro.params;
-const { articles } = Astro.props;
+const { works } = Astro.props;
 
-const article = articles.find((article) => article.id === id);
+const article = works.find((work) => work.id === id);
 
 const blocks = await getPageById(id);
+
+console.log(blocks);
 ---
 
 <RootLayout title={article?.title}>

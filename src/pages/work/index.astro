@@ -3,31 +3,31 @@ import RootLayout from "~/layouts/root-layout.astro";
 import NoContent from "~/components/layouts/no-content.astro";
 
 import { Image } from "astro:assets";
-import { getArticles } from "~/lib/notion";
+import { getWorks } from "~/lib/notion";
 import { Card, CardContent, CardFooter } from "~/components/ui/card";
 
-const articles = await getArticles();
+const works = await getWorks();
 ---
 
-<RootLayout title="Article">
+<RootLayout title="Works">
   {
-    articles.length === 0 ? (
+    works.length === 0 ? (
       <NoContent />
     ) : (
       <ul class="grid grid-cols-2 gap-4 px-4 md:grid-cols-3">
-        {articles.map((article) => (
+        {works.map((work) => (
           <Card className="bg-zinc-900/50 border-zinc-600">
-            <a href={`/article/${article.id}`}>
+            <a href={`/work/${work.id}`}>
               <CardContent className="grid aspect-[4/3] place-items-center text-zinc-400 hover:text-zinc-100 bg-zinc-950 rounded-t-lg">
-                <p class="mt-4 text-sm md:text-base">{article.title}</p>
+                <p class="mt-4 text-sm md:text-base">{work.title}</p>
               </CardContent>
               <CardFooter className="flex items-center justify-center space-x-2 text-sm text-zinc-500 mt-6">
-                <p>編纂員: {article?.name}</p>
+                <p>編纂員: {work?.name}</p>
                 <Image
-                  src={article?.avatar!}
+                  src={work?.avatar!}
                   width={20}
                   height={20}
-                  alt={article?.name}
+                  alt={work?.name}
                   class="rounded-full"
                 />
               </CardFooter>

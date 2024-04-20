@@ -162,7 +162,7 @@ export const getHome = async () => {
   return results.filter((d) => "type" in d) as BlockObjectResponse[];
 };
 
-export const getArticlePageById = async (id: string) => {
+export const getPageById = async (id: string) => {
   const results = (
     await notion.blocks.children.list({
       block_id: id,
