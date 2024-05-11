@@ -1,6 +1,27 @@
 import { Client } from "@notionhq/client";
 import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
+type NotionColor =
+  | "default"
+  | "gray"
+  | "brown"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "purple"
+  | "pink"
+  | "red"
+  | "gray_background"
+  | "brown_background"
+  | "orange_background"
+  | "yellow_background"
+  | "green_background"
+  | "blue_background"
+  | "purple_background"
+  | "pink_background"
+  | "red_background";
+
 type FilterdArticlesData = {
   id: string;
   title: string[];
@@ -170,4 +191,13 @@ export const getPageById = async (id: string) => {
   ).results;
 
   return results.filter((d) => "type" in d) as BlockObjectResponse[];
+};
+
+export const convBgColor = (color: NotionColor) => {
+  switch (color) {
+    case "purple_background":
+      return "bg-notion-callout-purple";
+    default:
+      return "bg-notion-callout-default";
+  }
 };
