@@ -1,0 +1,14 @@
+---
+import RootLayout from "~/layouts/root-layout.astro";
+
+import { BlockToJSX } from "~/components/blocks/block-to-jsx";
+import { getHome } from "~/lib/notion";
+
+const blocks = await getHome();
+---
+
+<RootLayout title="About">
+  <ul class="mx-auto px-4">
+    {blocks.map((block) => <BlockToJSX block={block} />)}
+  </ul>
+</RootLayout>
