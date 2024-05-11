@@ -6,6 +6,8 @@ import RootLayout from "~/layouts/root-layout.astro";
 import { getPageById } from "~/lib/notion";
 import { getArticles } from "~/lib/notion";
 
+import LinkCard from "~/components/blocks/link-card.astro";
+
 export const getStaticPaths = async () => {
   const articles = await getArticles();
   return articles.map((article) => {
@@ -26,8 +28,6 @@ const { articles } = Astro.props;
 const article = articles.find((article) => article.id === id);
 
 const blocks = await getPageById(id);
-
-console.log(blocks.filter((block) => block.type !== "paragraph"));
 ---
 
 <RootLayout title={article?.title}>
@@ -50,6 +50,14 @@ console.log(blocks.filter((block) => block.type !== "paragraph"));
     </div>
   </div>
   <ul class="mx-auto mt-10 px-4 text-sm text-zinc-200 sm:text-base">
-    {blocks.map((block) => <BlockToJSX block={block} />)}
+    {
+      blocks.map((block) =>
+        block.type === "bookmark" ? (
+          <LinkCard block={block} />
+        ) : (
+          <BlockToJSX block={block} />
+        ),
+      )
+    }
   </ul>
 </RootLayout>

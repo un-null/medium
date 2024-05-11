@@ -1,0 +1,21 @@
+---
+import type { BookmarkBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import ogs from "open-graph-scraper";
+
+interface Props {
+  block: BookmarkBlockObjectResponse;
+}
+
+const { block } = Astro.props;
+
+const { result } = await ogs({ url: block.bookmark.url });
+---
+
+<a
+  href={block.bookmark.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="flex items-center justify-between rounded-sm border border-zinc-600 p-4"
+>
+  <p>{result.ogTitle}</p>
+</a>
