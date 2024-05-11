@@ -3,6 +3,7 @@ import { Paragraph } from "./paragraph";
 import { Heading } from "./heading";
 import { BulletedList } from "./bulleted-list";
 import { Image } from "./image";
+import { Callout } from "./callout";
 
 export const BlockToJSX = ({ block }: { block: BlockObjectResponse }) => {
   const blockType = block.type;
@@ -20,6 +21,8 @@ export const BlockToJSX = ({ block }: { block: BlockObjectResponse }) => {
       );
     case "image":
       return <Image block={block} />;
+    case "callout":
+      return <Callout block={block} />;
 
     default:
       return <></>;

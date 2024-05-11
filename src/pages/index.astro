@@ -1,20 +1,97 @@
 ---
+import { Image } from "astro:assets";
+import { LucideIcon } from "~/components/layouts/lucide-icon";
+import { Card, CardContent, CardFooter } from "~/components/ui/card";
 import RootLayout from "~/layouts/root-layout.astro";
+import { getLatestArticles } from "~/lib/notion";
 
-import { BlockToJSX } from "~/components/blocks/block-to-jsx";
-import { getHome } from "~/lib/notion";
-
-const blocks = await getHome();
+const latestArticles = await getLatestArticles();
 ---
 
 <RootLayout title="Home">
-  <!-- <Card
-    className="mx-auto grid aspect-square w-[75%] max-w-sm place-content-center border-zinc-600 bg-[#191919]"
-  >
-    ...
-  </Card> -->
+  <div class="flex flex-col gap-8 px-4">
+    <p class="leading-8">
+      ここは私
+      nullを媒介とし、みんなの「興味」「体験」「熱中」を伝えるプライベートメディアです。<br
+      />
+      文章でも作品でも、形式は問いません。
+    </p>
 
-  <ul class="mx-auto px-4 text-sm text-zinc-200 sm:text-base">
-    {blocks.map((block) => <BlockToJSX block={block} />)}
-  </ul>
+    <a href="/about">
+      <Card className="flex gap-2 border-zinc-600 bg-[#191919] p-6">
+        <p>medium とは</p>
+        <LucideIcon type="go" />
+      </Card>
+    </a>
+
+    <section class="my-8">
+      <h1 class="mb-2 text-center text-2xl">Advertisement</h1>
+      <p class="text-center text-zinc-400">- Rent For Free -</p>
+
+      <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <Card className="aspect-square border-zinc-600 bg-zinc-900/50">
+          <CardContent
+            className="grid aspect-[4/3] place-items-center rounded-t-lg bg-zinc-950 text-zinc-400 hover:text-zinc-100"
+          >
+            <p class="mt-4 text-sm md:text-base">
+              <LucideIcon type="paint" />
+            </p>
+          </CardContent>
+          <CardFooter
+            className="mt-3 flex items-center justify-center space-x-2 p-0 text-xs text-zinc-500 sm:mt-4 sm:text-sm"
+          >
+            Coming Soon
+          </CardFooter>
+        </Card>
+        <Card className="aspect-square border-zinc-600 bg-zinc-900/50">
+          <CardContent
+            className="grid aspect-[4/3] place-items-center rounded-t-lg bg-zinc-950 text-zinc-400 hover:text-zinc-100"
+          >
+            <p class="mt-4 text-sm md:text-base">
+              <LucideIcon type="paint" />
+            </p>
+          </CardContent>
+          <CardFooter
+            className="mt-3 flex items-center justify-center space-x-2 p-0 text-xs text-zinc-500 sm:mt-4 sm:text-sm"
+          >
+            Coming Soon
+          </CardFooter>
+        </Card>
+      </div>
+    </section>
+
+    <section class="my-8">
+      <h1 class="mb-2 text-center text-2xl">Latest Articles</h1>
+      <a
+        href="/article"
+        class="underline-offset-3 flex items-center justify-center text-zinc-400 underline"
+      >
+        View All <LucideIcon type="go" size={16} color="#a1a1aa" />
+      </a>
+
+      <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+        {
+          latestArticles.map((article) => (
+            <Card className="bg-zinc-900/50 border-zinc-600 aspect-square">
+              <a href={`/article/${article.id}`}>
+                <CardContent className="grid aspect-[4/3] place-items-center text-zinc-400 hover:text-zinc-100 bg-zinc-950 rounded-t-lg">
+                  <p class="mt-4 text-sm md:text-base">{article.title}</p>
+                </CardContent>
+                <CardFooter className="flex items-center justify-center space-x-2 text-sm text-zinc-500 p-0 mt-3 sm:mt-4">
+                  <p>編纂員: {article?.name}</p>
+                  <Image
+                    src={article?.avatar!}
+                    width={20}
+                    height={20}
+                    alt={article?.name}
+                    class="rounded-full"
+                  />
+                </CardFooter>
+              </a>
+            </Card>
+          ))
+        }
+      </div>
+    </section>
+  </div>
 </RootLayout>

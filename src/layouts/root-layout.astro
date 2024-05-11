@@ -13,11 +13,13 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="twitter:card" content="summary" />
     <meta property="og:image" content={socialImageURL} />
+    <link rel="icon" href={socialImageURL} type="image/png" />
+
     <title>{title}</title>
   </head>
 
   <body
-    class="font-notion text-notion-text grid-rows-layout relative mx-auto grid min-h-[100dvh] w-full max-w-screen-md bg-[#191919] py-4"
+    class="text-notion-text relative mx-auto grid min-h-[100dvh] w-full max-w-screen-md grid-rows-layout bg-[#191919] py-4 font-notion text-sm text-zinc-200 sm:text-base"
   >
     <header class="grid place-items-center text-lg font-bold">Medium</header>
     <main class="my-10">

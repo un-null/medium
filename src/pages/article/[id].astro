@@ -6,6 +6,8 @@ import RootLayout from "~/layouts/root-layout.astro";
 import { getPageById } from "~/lib/notion";
 import { getArticles } from "~/lib/notion";
 
+import LinkCard from "~/components/blocks/link-card.astro";
+
 export const getStaticPaths = async () => {
   const articles = await getArticles();
   return articles.map((article) => {
@@ -29,7 +31,7 @@ const blocks = await getPageById(id);
 ---
 
 <RootLayout title={article?.title}>
-  <a href="/article/" class="block px-4">
+  <a href="/article/" class="mb-8 block px-8 sm:px-4">
     <LucideIcon type={"back"} />
   </a>
   <div class="grid place-items-center gap-4 px-4">
@@ -48,6 +50,14 @@ const blocks = await getPageById(id);
     </div>
   </div>
   <ul class="mx-auto mt-10 px-4 text-sm text-zinc-200 sm:text-base">
-    {blocks.map((block) => <BlockToJSX block={block} />)}
+    {
+      blocks.map((block) =>
+        block.type === "bookmark" ? (
+          <LinkCard block={block} />
+        ) : (
+          <BlockToJSX block={block} />
+        ),
+      )
+    }
   </ul>
 </RootLayout>

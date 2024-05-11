@@ -50,6 +50,8 @@ module.exports = {
         "notion-tag-blue": "rgba(82,156,202,0.5)",
         "notion-tag-green": "rgba(77,171,154,0.5)",
         "notion-tag-gray": "rgba(206,205,202,0.5)",
+        "notion-callout-purple": "rgb(43, 36, 49);",
+        "notion-callout-default": "rgb(80,85,88)",
       },
       fontFamily: {
         notion: [
