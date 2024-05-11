@@ -26,6 +26,8 @@ const { articles } = Astro.props;
 const article = articles.find((article) => article.id === id);
 
 const blocks = await getPageById(id);
+
+console.log(blocks.filter((block) => block.type !== "paragraph"));
 ---
 
 <RootLayout title={article?.title}>

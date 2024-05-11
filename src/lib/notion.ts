@@ -55,6 +55,7 @@ export const getArticles = async () => {
           equals: "公開済",
         },
       },
+      sorts: [{ property: "公開日", direction: "descending" }],
     })
   ).results;
 
