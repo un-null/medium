@@ -28,8 +28,8 @@ export function BottomNav() {
 	];
 
 	return (
-		<Card className="sticky mx-auto py-2 px-4">
-			<nav className="flex gap-4 bottom-8 mx-auto rounded-xl w-fit">
+		<Card className="sticky bottom-8 mx-auto py-2 px-4">
+			<nav className="flex gap-4 rounded-xl w-fit">
 				{navItems.map((item) => (
 					<Link key={item.href} href={item.href}>
 						<Button

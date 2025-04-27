@@ -23,7 +23,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistMono.variable} antialiased grid grid-rows-[auto_1fr] min-h-dvh max-w-screen-md w-full mx-auto p-4`}
+				className={`${geistMono.variable} antialiased grid grid-rows-[auto_1fr] min-h-dvh max-w-screen-md w-full mx-auto p-4 relative`}
 			>
 				<ThemeProvider
 					attribute="class"
