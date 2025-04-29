@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/theme-provider";
-import { Header } from "@/components/layout/header";
 import { BottomNav } from "@/components/layout/bottom-nav";
 
 const geistMono = Geist_Mono({
@@ -23,7 +22,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistMono.className} antialiased grid grid-rows-[auto_1fr] min-h-dvh max-w-screen-md w-full mx-auto p-4 relative`}
+				className={`${geistMono.className} antialiased grid grid-rows-[1fr_auto] min-h-dvh max-w-screen-md w-full mx-auto p-4 relative`}
 			>
 				<ThemeProvider
 					attribute="class"
@@ -31,11 +30,10 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<Header />
 					<main className="py-4">{children}</main>
-				</ThemeProvider>
 
-				<BottomNav />
+					<BottomNav />
+				</ThemeProvider>
 			</body>
 		</html>
 	);

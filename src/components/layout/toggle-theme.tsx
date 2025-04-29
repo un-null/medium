@@ -1,9 +1,9 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/shadcn/components/ui/button";
+import { LampCeiling } from "lucide-react";
 
 export function ToggleTheme() {
 	const { theme, setTheme } = useTheme();
@@ -14,9 +14,11 @@ export function ToggleTheme() {
 				theme === "light" ? setTheme("dark") : setTheme("light");
 			}}
 			variant={"link"}
-			className="cursor-pointer"
+			className="cursor-pointer text-zinc-600 dark:text-zinc-400 hover:text-foreground dark:hover:text-foreground"
 		>
-			{theme === "light" ? "dark" : "light"}
+			<LampCeiling
+				className={theme === "light" ? "text-yellow-500" : undefined}
+			/>
 		</Button>
 	);
 }
