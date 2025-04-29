@@ -1,6 +1,6 @@
 import { getLatestArticles } from "@/lib/notion";
 import { Card, CardContent, CardFooter } from "@/shadcn/components/ui/card";
-import { ChevronRight, Paintbrush } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 export default async function Home() {
@@ -12,9 +12,10 @@ export default async function Home() {
 				<h1 className="text-2xl">medium</h1>
 
 				<p className="leading-8 mt-4">
-					ここは null を媒介として、"熱" を伝えるプライベートメディアです。
+					ここは null を媒介として、みんなの "熱"
+					を伝えるプライベートメディアです。
 					<br />
-					文章でも写真でも、形式は問いません。
+					文章でも作品でも、形式は問いません。
 				</p>
 			</div>
 

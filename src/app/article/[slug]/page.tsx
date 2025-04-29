@@ -22,7 +22,10 @@ export default async function ArticleId({
 
 	return (
 		<div>
-			<Link href="/article" className="mb-8 block px-8 sm:px-4">
+			<Link
+				href="/article"
+				className="my-8 block px-8 sm:px-4 w-fit text-zinc-600 dark:text-zinc-400 hover:text-foreground dark:hover:text-foreground"
+			>
 				<MoveLeft />
 			</Link>
 			<div className="grid place-items-center gap-4 px-4">

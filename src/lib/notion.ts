@@ -43,6 +43,15 @@ export const notion = new Client({
 	auth: process.env.NOTION_KEY,
 });
 
+export const getHome = async () => {
+	const page = process.env.NOTION_HOME_PAGE_ID;
+
+	const results = (await notion.blocks.children.list({ block_id: page }))
+		.results;
+
+	return results.filter((d) => "type" in d) as BlockObjectResponse[];
+};
+
 export const getArticles = async () => {
 	const db = process.env.NOTION_ARTICLE_DATABASE_ID;
 
