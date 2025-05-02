@@ -1,3 +1,5 @@
+"use client";
+
 import type { ImageBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import Image from "next/image";
 
@@ -14,7 +16,9 @@ export const ImageBlock = ({ block }: { block: ImageBlockObjectResponse }) => {
 				alt={caption}
 				width={300}
 				height={300}
-				className="w-full h-auto object-contain"
+				data-loaded="false"
+				onLoad={(e) => e.currentTarget.setAttribute("data-loaded", "true")}
+				className="w-full aspect-video object-contain data-[loaded=false]:animate-pulse data-[loaded=false]:bg-zinc-200"
 			/>
 		</div>
 	);
