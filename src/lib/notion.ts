@@ -159,7 +159,14 @@ export const getArticleById = async (id: string) => {
 				? article.properties["タイトル"].title.map((t) => t.plain_text)
 				: [""];
 
+		const claps =
+			article.properties["Claps"].type === "number" &&
+			typeof article.properties["Claps"].number === "number"
+				? article.properties["Claps"].number
+				: 0;
+
 		const editor = article.properties["編纂員"];
+
 		const user =
 			editor?.type === "created_by" && "name" in editor.created_by
 				? {
@@ -171,6 +178,7 @@ export const getArticleById = async (id: string) => {
 		return {
 			id: article.id,
 			title,
+			claps,
 			...user,
 		};
 	}

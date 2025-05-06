@@ -1,5 +1,6 @@
 import { BlockToJSX } from "@/components/blocks/block-to-jsx";
 import { LinkCard } from "@/components/blocks/link-card";
+import { ClapButton } from "@/components/layout/clap-button";
 import { getArticleById, getPageById } from "@/lib/notion";
 import { MoveLeft } from "lucide-react";
 import Image from "next/image";
@@ -21,7 +22,7 @@ export default async function ArticleId({
 	const blocks = await getPageById(slug);
 
 	return (
-		<div>
+		<div className="space-y-6">
 			<Link
 				href="/article"
 				className="my-8 block px-8 sm:px-4 w-fit text-zinc-600 dark:text-zinc-400 hover:text-foreground dark:hover:text-foreground"
@@ -50,6 +51,8 @@ export default async function ArticleId({
 					),
 				)}
 			</ul>
+
+			<ClapButton slug={slug} initialClaps={article.claps} />
 		</div>
 	);
 }
