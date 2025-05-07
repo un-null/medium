@@ -1,7 +1,18 @@
 import { NoContent } from "@/components/layout/no-content";
 import { getArticles } from "@/lib/notion";
 import { Card, CardContent, CardFooter } from "@/shadcn/components/ui/card";
+import type { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+	title: "Articles",
+	description: "Articles curated by editors",
+	openGraph: {
+		title: "Articles",
+		description: "Articles curated by editors",
+		siteName: "Medium",
+	},
+};
 
 export default async function Article() {
 	const articles = await getArticles();

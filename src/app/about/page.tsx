@@ -1,7 +1,20 @@
 import { BlockToJSX } from "@/components/blocks/block-to-jsx";
 import { getHome } from "@/lib/notion";
 import { MoveLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+	title: "About",
+	description:
+		"A private media platform that shares passion, with 'null' as the medium.",
+	openGraph: {
+		title: "About",
+		description:
+			"A private media platform that shares passion, with 'null' as the medium.",
+		siteName: "Medium",
+	},
+};
 
 export default async function About() {
 	const blocks = await getHome();

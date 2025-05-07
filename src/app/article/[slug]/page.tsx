@@ -2,16 +2,48 @@ import { BlockToJSX } from "@/components/blocks/block-to-jsx";
 import { LinkCard } from "@/components/blocks/link-card";
 import { ClapButton } from "@/components/layout/clap-button";
 import { getArticleById, getPageById } from "@/lib/notion";
+
 import { MoveLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function ArticleId({
-	params,
-}: {
+type Props = {
 	params: Promise<{ slug: string }>;
-}) {
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const { slug } = await params;
+
+	const article = await getArticleById(slug);
+
+	if (!article) {
+		return {
+			title: "Article Not Found",
+		};
+	}
+
+	return {
+		title: article.title[0],
+		openGraph: {
+			title: article.title[0],
+			images: [
+				{
+					url: article.avatar,
+					alt: article.name,
+				},
+			],
+		},
+		twitter: {
+			card: "summary",
+			title: `${article.title[0]}`,
+			images: [article.avatar],
+		},
+	};
+}
+
+export default async function ArticleId({ params }: Props) {
 	const { slug } = await params;
 	const article = await getArticleById(slug);
 
