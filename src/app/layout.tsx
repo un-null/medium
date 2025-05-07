@@ -11,18 +11,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	title: { default: "Medium", template: "%s | Medium" },
-	description: "Contact Page",
+	description:
+		"A private media platform that shares passion, with null as the medium.",
 	openGraph: {
 		title: "Medium",
 		description:
 			"A private media platform that shares passion, with null as the medium.",
 		siteName: "Medium",
+		images: [{ url: "/og.png", alt: "medium-og" }],
 	},
 
 	twitter: {
 		card: "summary",
 		site: "@Medium",
 		creator: "@null",
+		images: [{ url: "/og.png", alt: "medium-og" }],
 	},
 };
 

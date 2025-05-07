@@ -28,17 +28,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 		title: article.title[0],
 		openGraph: {
 			title: article.title[0],
-			images: [
-				{
-					url: article.avatar,
-					alt: article.name,
-				},
-			],
+			images: [{ url: "/og.png", alt: "medium-og" }],
 		},
 		twitter: {
 			card: "summary",
 			title: `${article.title[0]}`,
-			images: [article.avatar],
+			images: [{ url: "/og.png", alt: "medium-og" }],
 		},
 	};
 }

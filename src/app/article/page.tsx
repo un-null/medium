@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 		title: "Articles",
 		description: "Articles curated by editors",
 		siteName: "Medium",
+		images: [{ url: "/og.png", alt: "medium-og" }],
 	},
 };
 

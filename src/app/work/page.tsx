@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 		title: "Works",
 		description: "Comming Soon",
 		siteName: "Medium",
+		images: [{ url: "/og.png", alt: "medium-og" }],
 	},
 };
 
