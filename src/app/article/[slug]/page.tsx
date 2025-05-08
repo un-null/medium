@@ -1,5 +1,6 @@
 import { BlockToJSX } from "@/components/blocks/block-to-jsx";
 import { LinkCard } from "@/components/blocks/link-card";
+import { TOC } from "@/components/blocks/toc";
 import { ClapButton } from "@/components/layout/clap-button";
 import { getArticleById, getPageById } from "@/lib/notion";
 
@@ -47,6 +48,9 @@ export default async function ArticleId({ params }: Props) {
 	}
 
 	const blocks = await getPageById(slug);
+	const headings = blocks.filter((block) =>
+		["heading_1", "heading_2", "heading_3"].includes(block.type),
+	);
 
 	return (
 		<div className="space-y-6">
@@ -70,13 +74,11 @@ export default async function ArticleId({ params }: Props) {
 				</div>
 			</div>
 			<ul className="mx-auto mt-10 px-4 text-sm sm:text-base">
-				{blocks.map((block) =>
-					block.type === "bookmark" ? (
-						<LinkCard key={block.id} block={block} />
-					) : (
-						<BlockToJSX key={block.id} block={block} />
-					),
-				)}
+				<TOC headings={headings} />
+
+				{blocks.map((block) => (
+					<BlockToJSX key={block.id} block={block} />
+				))}
 			</ul>
 
 			<ClapButton slug={slug} initialClaps={article.claps} />
