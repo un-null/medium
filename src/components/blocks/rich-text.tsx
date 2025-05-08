@@ -1,4 +1,6 @@
+import { convColor } from "@/lib/notion";
 import type { RichTextItemResponse } from "@notionhq/client/build/src/api-endpoints";
+import clsx from "clsx";
 
 export const RichText = ({ text }: { text: RichTextItemResponse[] }) => {
 	return (
@@ -7,7 +9,7 @@ export const RichText = ({ text }: { text: RichTextItemResponse[] }) => {
 				<span className="block h-6" />
 			) : (
 				<>
-					{text.map((textItem, index: number) => {
+					{text.map((textItem) => {
 						if (textItem.href) {
 							return (
 								<a
@@ -21,7 +23,24 @@ export const RichText = ({ text }: { text: RichTextItemResponse[] }) => {
 								</a>
 							);
 						}
-						return textItem.plain_text;
+
+						const { annotations } = textItem;
+
+						const classNames = clsx({
+							"font-bold": annotations.bold,
+							italic: annotations.italic,
+							"line-through": annotations.strikethrough,
+							underline: annotations.underline,
+						});
+
+						return (
+							<span
+								key={textItem.href}
+								className={`${classNames} ${convColor(textItem.annotations.color)}`}
+							>
+								{textItem.plain_text}
+							</span>
+						);
 					})}
 				</>
 			)}

@@ -4,6 +4,8 @@ import { BulletedList } from "./bulleted-list";
 import { ImageBlock } from "./image-block";
 import { Callout } from "./callout";
 import { Heading } from "./heading";
+import { Video } from "./video";
+import { Quote } from "./quote";
 
 export const BlockToJSX = ({ block }: { block: BlockObjectResponse }) => {
 	const blockType = block.type;
@@ -23,7 +25,10 @@ export const BlockToJSX = ({ block }: { block: BlockObjectResponse }) => {
 			return <ImageBlock block={block} />;
 		case "callout":
 			return <Callout block={block} />;
-
+		case "quote":
+			return <Quote block={block} />;
+		case "video":
+			return <Video block={block} />;
 		default:
 			return <></>;
 	}
