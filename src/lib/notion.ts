@@ -1,26 +1,10 @@
 import { Client } from "@notionhq/client";
-import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type {
+	BlockObjectResponse,
+	TextRichTextItemResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 
-type NotionColor =
-	| "default"
-	| "gray"
-	| "brown"
-	| "orange"
-	| "yellow"
-	| "green"
-	| "blue"
-	| "purple"
-	| "pink"
-	| "red"
-	| "gray_background"
-	| "brown_background"
-	| "orange_background"
-	| "yellow_background"
-	| "green_background"
-	| "blue_background"
-	| "purple_background"
-	| "pink_background"
-	| "red_background";
+type NotionColor = TextRichTextItemResponse["annotations"]["color"];
 
 type FilterdArticlesData = {
 	id: string;
@@ -194,11 +178,34 @@ export const getPageById = async (id: string) => {
 	return results.filter((d) => "type" in d) as BlockObjectResponse[];
 };
 
-export const convBgColor = (color: NotionColor | string) => {
+export const convBgColor = (color: NotionColor) => {
 	switch (color) {
 		case "purple_background":
 			return "bg-notion-callout-purple";
 		default:
 			return "bg-notion-callout-default";
+	}
+};
+
+export const convColor = (color: NotionColor) => {
+	switch (color) {
+		case "brown":
+			return "text-notion-brown";
+		case "blue":
+			return "text-notion-blue";
+		case "orange":
+			return "text-notion-orange";
+		case "yellow":
+			return "text-notion-yellow";
+		case "green":
+			return "text-notion-green";
+		case "purple":
+			return "text-notion-purple";
+		case "pink":
+			return "text-notion-pink";
+		case "red":
+			return "text-notion-red";
+		default:
+			return "";
 	}
 };
