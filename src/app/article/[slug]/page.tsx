@@ -74,7 +74,7 @@ export default async function ArticleId({ params }: Props) {
 				</div>
 			</div>
 			<ul className="mx-auto mt-10 px-4 text-sm sm:text-base">
-				<TOC headings={headings} />
+				{headings.length !== 0 && <TOC headings={headings} />}
 
 				{blocks.map((block) => (
 					<BlockToJSX key={block.id} block={block} />

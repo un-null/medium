@@ -30,8 +30,6 @@ const getTocItems = (headings: BlockObjectResponse[]): TocItem[] => {
 export function TOC({ headings }: { headings: BlockObjectResponse[] }) {
 	const tocItems = getTocItems(headings);
 
-	console.log(tocItems);
-
 	return (
 		<details className="p-4 border mb-8">
 			<summary className="cursor-pointer">
