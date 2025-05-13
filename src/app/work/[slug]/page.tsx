@@ -1,7 +1,7 @@
 import { BlockToJSX } from "@/components/blocks/block-to-jsx";
 import { TOC } from "@/components/blocks/toc";
 import { ClapButton } from "@/components/layout/clap-button";
-import { getArticleById, getPageById } from "@/lib/notion";
+import { getPageById, getWorkById } from "@/lib/notion";
 
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
@@ -16,33 +16,33 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const { slug } = await params;
 
-	const article = await getArticleById(slug);
+	const work = await getWorkById(slug);
 
-	if (!article) {
+	if (!work) {
 		return {
-			title: "Article Not Found",
+			title: "Work Not Found",
 		};
 	}
 
 	return {
-		title: article.title[0],
+		title: work.title[0],
 		openGraph: {
-			title: article.title[0],
+			title: work.title[0],
 			images: [{ url: "/og.png", alt: "medium-og" }],
 		},
 		twitter: {
 			card: "summary",
-			title: `${article.title[0]}`,
+			title: `${work.title[0]}`,
 			images: [{ url: "/og.png", alt: "medium-og" }],
 		},
 	};
 }
 
-export default async function ArticleId({ params }: Props) {
+export default async function WorkId({ params }: Props) {
 	const { slug } = await params;
-	const article = await getArticleById(slug);
+	const work = await getWorkById(slug);
 
-	if (!article) {
+	if (!work) {
 		return notFound();
 	}
 
@@ -54,20 +54,20 @@ export default async function ArticleId({ params }: Props) {
 	return (
 		<div className="space-y-6">
 			<Link
-				href="/article"
+				href="/work"
 				className="my-8 block px-8 sm:px-4 w-fit text-zinc-600 dark:text-zinc-400 hover:text-foreground dark:hover:text-foreground"
 			>
 				<MoveLeft />
 			</Link>
 			<div className="grid place-items-center gap-4 px-4">
-				<h1 className="px-4 text-xl font-bold">{article.title}</h1>
+				<h1 className="px-4 text-xl font-bold">{work.title}</h1>
 				<div className="flex items-center justify-center space-x-2 text-sm text-zinc-500">
-					<p>編纂員: {article.name}</p>
+					<p>編纂員: {work.name}</p>
 					<Image
-						src={article.avatar}
+						src={work.avatar}
 						width={20}
 						height={20}
-						alt={article.name}
+						alt={work.name}
 						className="rounded-full"
 					/>
 				</div>
@@ -80,7 +80,7 @@ export default async function ArticleId({ params }: Props) {
 				))}
 			</ul>
 
-			<ClapButton slug={slug} initialClaps={article.claps} />
+			<ClapButton slug={slug} initialClaps={work.claps} />
 		</div>
 	);
 }
