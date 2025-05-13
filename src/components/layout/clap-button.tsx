@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Button } from "@/shadcn/components/ui/button";
-import { clap } from "@/app/article/[slug]/action";
+import { clap } from "@/actions/clap";
 
 export function ClapButton({
 	slug,
