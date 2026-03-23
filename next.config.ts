@@ -1,20 +1,21 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
+import remarkGfm from "remark-gfm";
+import remarkFrontmatter from "remark-frontmatter";
 
 const nextConfig: NextConfig = {
-	images: {
-		remotePatterns: [
-			{
-				protocol: "https",
-				hostname: "s3-us-west-2.amazonaws.com",
-				pathname: "**",
-			},
-			{
-				protocol: "https",
-				hostname: "prod-files-secure.s3.us-west-2.amazonaws.com",
-				pathname: "**",
-			},
-		],
+	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+
+	experimental: {
+		// dynamicIO: true,
 	},
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+	options: {
+		remarkPlugins: [remarkGfm, remarkFrontmatter],
+		rehypePlugins: [],
+	},
+});
+
+export default withMDX(nextConfig);
