@@ -1,8 +1,9 @@
 import { NoContent } from "@/components/layout/no-content";
-import { getArticles } from "@/lib/notion";
+import { getAllPostsMeta } from "@/lib/posts";
 import { Card, CardContent, CardFooter } from "@/shadcn/components/ui/card";
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
 	title: "Articles",
@@ -16,7 +17,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Article() {
-	const articles = await getArticles();
+	"use cache";
+
+	const articles = await getAllPostsMeta();
 
 	return (
 		<div className="space-y-8 mt-4">
@@ -24,27 +27,31 @@ export default async function Article() {
 			{articles.length === 0 ? (
 				<NoContent />
 			) : (
-				<ul className="grid grid-cols-2 gap-4 px-4 md:grid-cols-3">
+				<div className="grid grid-cols-2 gap-4 px-4 md:grid-cols-3">
 					{articles.map((article) => (
-						<Card key={article.id} className="p-0 aspect-square">
-							<a href={`/article/${article.id}`}>
-								<CardContent className="grid aspect-[4/3] place-items-center text-zinc-600 dark:text-zinc-400 hover:text-foreground dark:hover:text-foreground  dark:bg-zinc-950 rounded-t-xl border-b">
-									<p className="mt-4 text-sm md:text-base">{article.title}</p>
+						<Card key={article.slug} className="p-0 aspect-square">
+							<Link href={`/article/${article.slug}`}>
+								<CardContent className="grid aspect-[4/3] place-items-center text-zinc-600 dark:text-zinc-400 hover:text-foreground dark:hover:text-foreground  dark:bg-zinc-950 rounded-t-xl border-b px-4 text-center">
+									<p className="mt-4 text-sm md:text-base font-medium leading-relaxed">
+										{article.title}
+									</p>
 								</CardContent>
 								<CardFooter className="flex items-center justify-center space-x-2 text-sm text-zinc-500 p-0 mt-3 sm:mt-4 cursor-default">
-									<p className="text-xs sm:text-sm">編纂員: {article?.name}</p>
-									<Image
-										src={article?.avatar}
-										width={16}
-										height={16}
-										alt={article?.name}
-										className="rounded-full sm:w-5 sm:h-5"
-									/>
+									<p className="text-xs sm:text-sm">編纂員: {article.name}</p>
+									{article.avatar && (
+										<Image
+											src={article.avatar}
+											width={16}
+											height={16}
+											alt={article.name}
+											className="rounded-full sm:w-5 sm:h-5 object-cover"
+										/>
+									)}
 								</CardFooter>
-							</a>
+							</Link>
 						</Card>
 					))}
-				</ul>
+				</div>
 			)}
 		</div>
 	);

@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
 	images: {
 		domains: ["s3-us-west-2.amazonaws.com"],
 	},
+	cacheComponents: true,
 
 	experimental: {
 		// dynamicIO: true,
