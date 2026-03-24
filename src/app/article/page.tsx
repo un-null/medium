@@ -1,24 +1,10 @@
 import { NoContent } from "@/components/layout/no-content";
 import { getAllPostsMeta } from "@/lib/posts";
 import { Card, CardContent, CardFooter } from "@/shadcn/components/ui/card";
-import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-	title: "Articles",
-	description: "Articles curated by editors",
-	openGraph: {
-		title: "Articles",
-		description: "Articles curated by editors",
-		siteName: "Medium",
-		images: [{ url: "/og.png", alt: "medium-og" }],
-	},
-};
 
 export default async function Article() {
 	"use cache";
-
 	const articles = await getAllPostsMeta();
 
 	return (
@@ -29,25 +15,25 @@ export default async function Article() {
 			) : (
 				<div className="grid grid-cols-2 gap-4 px-4 md:grid-cols-3">
 					{articles.map((article) => (
-						<Card key={article.slug} className="p-0 aspect-square">
-							<Link href={`/article/${article.slug}`}>
-								<CardContent className="grid aspect-[4/3] place-items-center text-zinc-600 dark:text-zinc-400 hover:text-foreground dark:hover:text-foreground  dark:bg-zinc-950 rounded-t-xl border-b px-4 text-center">
-									<p className="mt-4 text-sm md:text-base font-medium leading-relaxed">
-										{article.title}
-									</p>
+						<Card
+							key={article.slug}
+							className="p-0 overflow-hidden border-none shadow-none bg-transparent"
+						>
+							<Link href={`/article/${article.slug}`} className="group">
+								<CardContent className="aspect-square bg-slate-100 dark:bg-zinc-900 rounded-2xl flex items-center justify-center p-6 transition-colors group-hover:bg-slate-200 dark:group-hover:bg-zinc-800">
+									<div className="w-full h-full bg-white dark:bg-zinc-950 rounded-sm shadow-sm flex flex-col p-4 border border-zinc-100 dark:border-zinc-800 overflow-hidden">
+										<span className="text-[10px] font-mono text-zinc-400 mb-2">
+											{article.date.replace(/-/g, ".")}
+										</span>
+										<p className="text-xs sm:text-sm font-bold text-zinc-800 dark:text-zinc-200 leading-snug">
+											{article.title}
+										</p>
+										<div className="mt-auto space-y-1 opacity-20">
+											<div className="h-1 w-full bg-zinc-400 rounded-full" />
+											<div className="h-1 w-3/4 bg-zinc-400 rounded-full" />
+										</div>
+									</div>
 								</CardContent>
-								<CardFooter className="flex items-center justify-center space-x-2 text-sm text-zinc-500 p-0 mt-3 sm:mt-4 cursor-default">
-									<p className="text-xs sm:text-sm">編纂員: {article.name}</p>
-									{article.avatar && (
-										<Image
-											src={article.avatar}
-											width={16}
-											height={16}
-											alt={article.name}
-											className="rounded-full sm:w-5 sm:h-5 object-cover"
-										/>
-									)}
-								</CardFooter>
 							</Link>
 						</Card>
 					))}
