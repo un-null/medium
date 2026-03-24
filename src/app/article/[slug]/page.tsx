@@ -75,7 +75,7 @@ export default async function ArticleId({ params }: Props) {
 				</div>
 			</div>
 
-			<div className="mx-auto mt-10 px-4 text-sm sm:text-base prose prose-neutral dark:prose-invert max-w-none">
+			<div className="mx-auto mt-10 px-4 text-sm sm:text-base max-w-none">
 				{PostContent && <PostContent />}
 			</div>
 
