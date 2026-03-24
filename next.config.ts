@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
-import remarkGfm from "remark-gfm";
-import remarkFrontmatter from "remark-frontmatter";
 
 const nextConfig: NextConfig = {
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+	images: {
+		domains: ["s3-us-west-2.amazonaws.com"],
+	},
 
 	experimental: {
 		// dynamicIO: true,
@@ -13,7 +14,7 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({
 	options: {
-		remarkPlugins: [remarkGfm, remarkFrontmatter],
+		remarkPlugins: [["remark-gfm"], ["remark-frontmatter"]],
 		rehypePlugins: [],
 	},
 });
