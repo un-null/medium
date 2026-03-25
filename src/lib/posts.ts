@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-// The root directory where your .mdx files live
+
 const postsDirectory = path.join(process.cwd(), "content/articles");
 
 export type PostMeta = {
