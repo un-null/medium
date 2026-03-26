@@ -13,5 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default function Contact() {
-	return <NoContent />;
+	return (
+		<div className="space-y-8 mt-4">
+			<h1 className="text-2xl px-4">Contact</h1>
+			<NoContent />
+		</div>
+	);
 }
