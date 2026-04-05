@@ -1,52 +1,69 @@
-import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
-
-const postsDirectory = path.join(process.cwd(), "content/articles");
+import { db } from "@/lib/db";
+import { articles, authors } from "@/lib/schema";
+import { eq } from "drizzle-orm";
+import { cache } from "react";
 
 export type PostMeta = {
 	title: string;
 	date: string;
 	name: string;
-	avatar?: string;
-	claps?: number;
-	draft: boolean;
+	avatar: string;
+	claps: number;
 	slug: string;
 	description?: string;
-	tags?: string[];
+	content_mdx?: string;
 };
 
-export async function getAllPostsMeta(): Promise<PostMeta[]> {
-	if (!fs.existsSync(postsDirectory)) {
-		return [];
-	}
-
-	const files = fs.readdirSync(postsDirectory);
-
-	const posts = files
-		.filter((filename) => filename.endsWith(".mdx"))
-		.map((filename) => {
-			const filePath = path.join(postsDirectory, filename);
-			const fileContent = fs.readFileSync(filePath, "utf8");
-
-			const { data } = matter(fileContent);
-
-			return {
-				...data,
-				slug: filename.replace(".mdx", ""),
-				draft: data.draft ?? false,
-				claps: data.claps ?? 0,
-			} as PostMeta;
+export const getAllPostsMeta = cache(async (): Promise<PostMeta[]> => {
+	const rows = await db
+		.select({
+			slug: articles.slug,
+			title: articles.title,
+			date: articles.date,
+			claps: articles.claps,
+			description: articles.description,
+			name: authors.name,
+			avatar: authors.avatar,
 		})
-		.filter((post) => !post.draft)
-		.sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1));
+		.from(articles)
+		.innerJoin(authors, eq(articles.author_id, authors.id))
+		.where(eq(articles.status, "published"))
+		.orderBy(articles.date);
 
-	return posts;
-}
+	return rows
+		.map((r) => ({
+			...r,
+			claps: r.claps ?? 0,
+			description: r.description ?? undefined,
+		}))
+		.sort((a, b) => (a.date > b.date ? -1 : 1));
+});
 
-export async function getPostBySlug(slug: string): Promise<PostMeta | null> {
-	const allPosts = await getAllPostsMeta();
-	const post = allPosts.find((p) => p.slug === slug);
+export const getPostBySlug = cache(
+	async (slug: string): Promise<PostMeta | null> => {
+		const rows = await db
+			.select({
+				slug: articles.slug,
+				title: articles.title,
+				date: articles.date,
+				claps: articles.claps,
+				description: articles.description,
+				content_mdx: articles.content_mdx,
+				name: authors.name,
+				avatar: authors.avatar,
+			})
+			.from(articles)
+			.innerJoin(authors, eq(articles.author_id, authors.id))
+			.where(eq(articles.slug, slug))
+			.limit(1);
 
-	return post || null;
-}
+		const row = rows[0];
+		if (!row) return null;
+
+		return {
+			...row,
+			claps: row.claps ?? 0,
+			description: row.description ?? undefined,
+		};
+	},
+);

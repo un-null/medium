@@ -11,18 +11,13 @@ export function ClapButton({
 	slug: string;
 	initialClaps: number;
 }) {
-	const [confirmedClaps, setConfirmedClaps] = useState(initialClaps);
-	const [isPending, startTransition] = useTransition();
-
 	const [optimisticClaps, setOptimisticClaps] = useState(initialClaps);
+	const [isPending, startTransition] = useTransition();
 
 	const handleClap = () => {
 		setOptimisticClaps((prev) => prev + 1);
-
 		startTransition(() => {
-			clap(slug, confirmedClaps + 1).then(() => {
-				setConfirmedClaps((prev) => prev + 1);
-			});
+			clap(slug);
 		});
 	};
 

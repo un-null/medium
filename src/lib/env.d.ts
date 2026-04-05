@@ -4,5 +4,9 @@ declare namespace NodeJS {
 		readonly NOTION_ARTICLE_DATABASE_ID: string;
 		readonly NOTION_HOME_PAGE_ID: string;
 		readonly NOTION_WORK_DATABASE_ID: string;
+
+		readonly TURSO_DATABASE_URL: string;
+		readonly TURSO_AUTH_TOKEN: string;
+		readonly EDITOR_SECRET: string;
 	}
 }

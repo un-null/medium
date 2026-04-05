@@ -32,7 +32,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			const videoId = href ? getYouTubeId(href) : null;
 			if (videoId) {
 				return (
-					<div className="my-4 aspect-video w-full">
+					<span className="my-4 aspect-video w-full block">
 						<iframe
 							src={`https://www.youtube.com/embed/${videoId}`}
 							title="YouTube video"
@@ -40,7 +40,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 							allowFullScreen
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						/>
-					</div>
+					</span>
 				);
 			}
 			return (
