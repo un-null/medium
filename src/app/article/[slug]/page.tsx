@@ -60,7 +60,7 @@ async function ArticleContent({ slug }: { slug: string }) {
 				<h1 className="px-4 text-xl font-bold">{article.title}</h1>
 				<div className="flex items-center justify-center space-x-2 text-sm text-zinc-500">
 					<p>編纂員: {article.name}</p>
-					{article.avatar && (
+					{article.avatar && article.avatar !== "/avatar.png" && (
 						<Image
 							src={article.avatar}
 							width={20}

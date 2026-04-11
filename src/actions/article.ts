@@ -5,7 +5,7 @@ import { verifyToken } from "@/lib/auth";
 import { articles } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 async function getAuthorId(): Promise<string> {
 	const cookieStore = await cookies();
@@ -43,7 +43,8 @@ export async function createArticle(data: {
 		claps: 0,
 	});
 
-	revalidateTag("articles");
+	// 修正: updateTag に変更
+	updateTag("articles");
 	return { id, slug: data.slug };
 }
 
@@ -73,7 +74,7 @@ export async function saveArticle(data: {
 		})
 		.where(eq(articles.id, data.id));
 
-	revalidateTag("articles");
+	updateTag("articles");
 	revalidatePath(`/article/${data.slug}`);
 	revalidatePath("/article");
 }
@@ -83,6 +84,6 @@ export async function deleteArticle(id: string): Promise<void> {
 
 	await db.delete(articles).where(eq(articles.id, id));
 
-	revalidateTag("articles");
+	updateTag("articles");
 	revalidatePath("/article");
 }

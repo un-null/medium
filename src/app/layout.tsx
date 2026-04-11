@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { Suspense } from "react";
 
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
@@ -50,7 +51,9 @@ export default function RootLayout({
 				>
 					<main className="py-4">{children}</main>
 
-					<BottomNav />
+					<Suspense fallback={null}>
+						<BottomNav />
+					</Suspense>
 				</ThemeProvider>
 			</body>
 		</html>

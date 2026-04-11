@@ -1,8 +1,22 @@
 import { logoutAction } from "@/actions/auth";
+import { createArticle } from "@/actions/article";
+import { ArticleRow } from "@/components/editor/ArticleRow";
 import { db } from "@/lib/db";
 import { articles, authors } from "@/lib/schema";
 import { eq } from "drizzle-orm";
-import Link from "next/link";
+import { redirect } from "next/navigation";
+
+async function createAndRedirect() {
+	"use server";
+	const today = new Date().toISOString().slice(0, 10);
+	const { id } = await createArticle({
+		slug: `draft-${Date.now()}`,
+		title: "Untitled",
+		date: today,
+		content_mdx: "",
+	});
+	redirect(`/editor/${id}`);
+}
 
 export default async function EditorPage() {
 	const rows = await db
@@ -26,12 +40,14 @@ export default async function EditorPage() {
 			<div className="flex items-center justify-between">
 				<h1 className="text-xl font-bold">Editor</h1>
 				<div className="flex gap-3">
-					<Link
-						href="/editor/new"
-						className="rounded bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-900 hover:bg-zinc-200"
-					>
-						+ New Article
-					</Link>
+					<form action={createAndRedirect}>
+						<button
+							type="submit"
+							className="rounded bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-900 hover:bg-zinc-200"
+						>
+							+ New Article
+						</button>
+					</form>
 					<form action={logoutAction}>
 						<button
 							type="submit"
@@ -45,27 +61,15 @@ export default async function EditorPage() {
 
 			<div className="space-y-2">
 				{sorted.map((article) => (
-					<Link
+					<ArticleRow
 						key={article.id}
-						href={`/editor/${article.id}`}
-						className="flex items-center justify-between rounded border border-zinc-800 px-4 py-3 hover:border-zinc-600"
-					>
-						<div className="space-y-0.5 min-w-0">
-							<p className="text-sm font-medium truncate">{article.title}</p>
-							<p className="text-xs text-zinc-500">
-								{article.date} · {article.authorName}
-							</p>
-						</div>
-						<span
-							className={`ml-4 shrink-0 rounded px-2 py-0.5 text-xs ${
-								article.status === "published"
-									? "bg-green-900 text-green-300"
-									: "bg-zinc-800 text-zinc-400"
-							}`}
-						>
-							{article.status}
-						</span>
-					</Link>
+						id={article.id}
+						slug={article.slug}
+						title={article.title}
+						date={article.date}
+						authorName={article.authorName}
+						status={article.status}
+					/>
 				))}
 			</div>
 		</div>

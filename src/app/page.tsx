@@ -17,7 +17,7 @@ async function LatestArticles() {
 						</CardContent>
 						<CardFooter className="flex items-center justify-center space-x-2 text-sm text-zinc-500 p-0 mt-3 sm:mt-4 cursor-default">
 							<p className="text-xs sm:text-sm">編纂員: {article?.name}</p>
-							{article.avatar && (
+							{article.avatar && article.avatar !== "/avatar.png" && (
 								<Image
 									src={article.avatar}
 									width={16}

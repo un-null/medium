@@ -5,7 +5,7 @@ export const config = {
 	matcher: ["/editor/:path*"],
 };
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 
 	if (pathname === "/editor/login") return NextResponse.next();

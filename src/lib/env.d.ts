@@ -10,9 +10,5 @@ declare namespace NodeJS {
 		readonly TURSO_AUTH_TOKEN: string;
 		readonly EDITOR_SECRET: string;
 		readonly NEXT_PUBLIC_SITE_URL: string;
-
-		readonly NOTION_KEY: string;
-		readonly NOTION_HOME_PAGE_ID: string;
-		readonly NOTION_WORK_DATABASE_ID: string;
 	}
 }
