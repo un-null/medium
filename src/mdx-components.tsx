@@ -29,7 +29,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		),
 		li: ({ children }) => <li className="my-1">{children}</li>,
 		blockquote: ({ children }) => (
-			<blockquote className="border-s-4 py-1 px-4 border-neutral-400 text-neutral-400 italic bg-neutral-900/30 rounded-r">
+			<blockquote className="border-s-4 py-1 px-4 border-zinc-400 dark:border-zinc-600 text-zinc-600 dark:text-zinc-400 italic bg-zinc-100 dark:bg-zinc-900/50 rounded-r">
 				{children}
 			</blockquote>
 		),

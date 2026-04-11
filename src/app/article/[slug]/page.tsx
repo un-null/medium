@@ -93,7 +93,11 @@ export default async function ArticleId({ params }: Props) {
 				<MoveLeft />
 			</Link>
 
-			<Suspense fallback={<div className="px-4 text-zinc-400">Loading...</div>}>
+			<Suspense
+				fallback={
+					<div className="px-4 text-center text-zinc-400">Loading...</div>
+				}
+			>
 				<ArticleContent slug={slug} />
 			</Suspense>
 		</div>

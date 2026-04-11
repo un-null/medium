@@ -11,7 +11,7 @@ export default function About() {
 				<MoveLeft />
 			</Link>
 
-			<div className="mx-auto px-4 text-sm sm:text-base space-y-4 leading-relaxed">
+			<div className="mx-auto px-4 mt-6 text-sm sm:text-base space-y-4 leading-relaxed">
 				<p>ここは null を媒介として、みんなの "熱" を伝えるプライベートメディアです。</p>
 				<p>気になっていること、体験したこと、熱中していること。文章でも作品でも、形式は問いません。</p>
 				<p>クローズドなカルチャーメディアですから、せいぜい私の友達とそのお友達くらいまでが訪れる場所です。だからって侮ってはいけません。なんせ私の友達の友達のお父さんの友達はあの "松本人志" ですから。</p>

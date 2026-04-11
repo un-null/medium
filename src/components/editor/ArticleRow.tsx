@@ -7,14 +7,13 @@ import { useRouter } from "next/navigation";
 
 interface Props {
 	id: string;
-	slug: string;
 	title: string;
 	date: string;
 	authorName: string;
 	status: string;
 }
 
-export function ArticleRow({ id, slug, title, date, authorName, status }: Props) {
+export function ArticleRow({ id, title, date, authorName, status }: Props) {
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
@@ -33,7 +32,7 @@ export function ArticleRow({ id, slug, title, date, authorName, status }: Props)
 		<div className="flex items-center gap-2">
 			<Link
 				href={`/editor/${id}`}
-				className="flex flex-1 items-center justify-between rounded border border-zinc-800 px-4 py-3 hover:border-zinc-600 min-w-0"
+				className="flex flex-1 items-center justify-between rounded border border-zinc-200 dark:border-zinc-800 px-4 py-3 hover:border-zinc-400 dark:hover:border-zinc-600 min-w-0"
 			>
 				<div className="space-y-0.5 min-w-0">
 					<p className="text-sm font-medium truncate">{title}</p>
@@ -44,8 +43,8 @@ export function ArticleRow({ id, slug, title, date, authorName, status }: Props)
 				<span
 					className={`ml-4 shrink-0 rounded px-2 py-0.5 text-xs ${
 						status === "published"
-							? "bg-green-900 text-green-300"
-							: "bg-zinc-800 text-zinc-400"
+							? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+							: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
 					}`}
 				>
 					{status}
@@ -56,7 +55,7 @@ export function ArticleRow({ id, slug, title, date, authorName, status }: Props)
 				<button
 					type="button"
 					onClick={() => dialogRef.current?.showModal()}
-					className="shrink-0 rounded border border-zinc-800 px-2 py-2 text-xs text-zinc-500 hover:border-red-800 hover:text-red-400"
+					className="cursor-pointer shrink-0 rounded border border-zinc-200 dark:border-zinc-800 px-2 py-2 text-xs text-zinc-400 hover:border-red-400 dark:hover:border-red-800 hover:text-red-500 dark:hover:text-red-400"
 					aria-label={`Delete ${title}`}
 				>
 					✕

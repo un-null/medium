@@ -43,7 +43,7 @@ export default async function EditorPage() {
 					<form action={createAndRedirect}>
 						<button
 							type="submit"
-							className="rounded bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-900 hover:bg-zinc-200"
+							className="cursor-pointer rounded bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-900 hover:bg-zinc-200"
 						>
 							+ New Article
 						</button>
@@ -51,7 +51,7 @@ export default async function EditorPage() {
 					<form action={logoutAction}>
 						<button
 							type="submit"
-							className="rounded border border-zinc-700 px-3 py-1.5 text-sm hover:border-zinc-400"
+							className="cursor-pointer rounded border border-zinc-300 dark:border-zinc-700 px-3 py-1.5 text-sm hover:border-zinc-500 dark:hover:border-zinc-400"
 						>
 							Logout
 						</button>
@@ -64,7 +64,6 @@ export default async function EditorPage() {
 					<ArticleRow
 						key={article.id}
 						id={article.id}
-						slug={article.slug}
 						title={article.title}
 						date={article.date}
 						authorName={article.authorName}

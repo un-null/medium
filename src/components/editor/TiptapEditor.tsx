@@ -80,7 +80,8 @@ export default function TiptapEditor({
 		editor.setOptions({
 			editorProps: {
 				attributes: {
-					class: "prose prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
+					class:
+						"prose prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
 				},
 				handlePaste: (_view, event) => {
 					const items = event.clipboardData?.items;
@@ -104,7 +105,9 @@ export default function TiptapEditor({
 		setSaving(true);
 		setMessage("");
 		try {
-			const markdown = (editor.storage as unknown as Record<string, MarkdownStorage>).markdown.getMarkdown();
+			const markdown = (
+				editor.storage as unknown as Record<string, MarkdownStorage>
+			).markdown.getMarkdown();
 			const json = JSON.stringify(editor.getJSON());
 			await saveArticle({
 				id,
@@ -139,14 +142,14 @@ export default function TiptapEditor({
 					<button
 						type="button"
 						onClick={() => editor?.chain().focus().toggleBold().run()}
-						className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("bold") ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("bold") ? "bg-zinc-700" : ""}`}
 					>
 						B
 					</button>
 					<button
 						type="button"
 						onClick={() => editor?.chain().focus().toggleItalic().run()}
-						className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 italic ${editor?.isActive("italic") ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 italic ${editor?.isActive("italic") ? "bg-zinc-700" : ""}`}
 					>
 						I
 					</button>
@@ -155,7 +158,7 @@ export default function TiptapEditor({
 						onClick={() =>
 							editor?.chain().focus().toggleHeading({ level: 2 }).run()
 						}
-						className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("heading", { level: 2 }) ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("heading", { level: 2 }) ? "bg-zinc-700" : ""}`}
 					>
 						H2
 					</button>
@@ -164,29 +167,25 @@ export default function TiptapEditor({
 						onClick={() =>
 							editor?.chain().focus().toggleHeading({ level: 3 }).run()
 						}
-						className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("heading", { level: 3 }) ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("heading", { level: 3 }) ? "bg-zinc-700" : ""}`}
 					>
 						H3
 					</button>
 					<button
 						type="button"
-						onClick={() =>
-							editor?.chain().focus().toggleBulletList().run()
-						}
-						className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("bulletList") ? "bg-zinc-700" : ""}`}
+						onClick={() => editor?.chain().focus().toggleBulletList().run()}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("bulletList") ? "bg-zinc-700" : ""}`}
 					>
 						List
 					</button>
 					<button
 						type="button"
-						onClick={() =>
-							editor?.chain().focus().toggleBlockquote().run()
-						}
-						className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("blockquote") ? "bg-zinc-700" : ""}`}
+						onClick={() => editor?.chain().focus().toggleBlockquote().run()}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("blockquote") ? "bg-zinc-700" : ""}`}
 					>
 						Quote
 					</button>
-					<label className="px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 cursor-pointer">
+					<label className="px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400">
 						Image
 						<input
 							type="file"
@@ -202,14 +201,12 @@ export default function TiptapEditor({
 				</div>
 
 				<div className="flex items-center gap-2">
-					{message && (
-						<span className="text-xs text-zinc-400">{message}</span>
-					)}
+					{message && <span className="text-xs text-zinc-400">{message}</span>}
 					<button
 						type="button"
 						onClick={() => handleSave("draft")}
 						disabled={saving}
-						className="rounded border border-zinc-700 px-3 py-1.5 text-xs hover:border-zinc-400 disabled:opacity-50"
+						className="rounded cursor-pointer border border-zinc-700 px-3 py-1.5 text-xs hover:border-zinc-400 disabled:opacity-50"
 					>
 						Save Draft
 					</button>
@@ -217,7 +214,7 @@ export default function TiptapEditor({
 						type="button"
 						onClick={() => handleSave("published")}
 						disabled={saving}
-						className="rounded bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-900 hover:bg-zinc-200 disabled:opacity-50"
+						className="rounded cursor-pointer bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-900 hover:bg-zinc-200 disabled:opacity-50"
 					>
 						{status === "published" ? "Update" : "Publish"}
 					</button>
