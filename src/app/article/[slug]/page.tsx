@@ -1,9 +1,9 @@
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { ClapButton } from "@/components/layout/clap-button";
 import { getAllPostsMeta, getPostBySlug } from "@/lib/posts";
 import { useMDXComponents } from "@/mdx-components";
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
@@ -60,15 +60,7 @@ async function ArticleContent({ slug }: { slug: string }) {
 				<h1 className="px-4 text-xl font-bold">{article.title}</h1>
 				<div className="flex items-center justify-center space-x-2 text-sm text-zinc-500">
 					<p>編纂員: {article.name}</p>
-					{article.avatar && article.avatar !== "/avatar.png" && (
-						<Image
-							src={article.avatar}
-							width={20}
-							height={20}
-							alt={article.name}
-							className="rounded-full"
-						/>
-					)}
+					<AuthorAvatar avatar={article.avatar ?? ""} name={article.name} size={20} />
 				</div>
 			</div>
 
