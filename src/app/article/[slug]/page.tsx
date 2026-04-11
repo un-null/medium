@@ -1,11 +1,14 @@
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { ClapButton } from "@/components/layout/clap-button";
-import { getPostBySlug, getAllPostsMeta } from "@/lib/posts";
-
+import { getAllPostsMeta, getPostBySlug } from "@/lib/posts";
+import { useMDXComponents } from "@/mdx-components";
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { compileMDX } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
+import remarkGfm from "remark-gfm";
+import { Suspense } from "react";
 
 type Props = {
 	params: Promise<{ slug: string }>;
@@ -36,19 +39,42 @@ export async function generateStaticParams() {
 	return posts.map((post) => ({ slug: post.slug }));
 }
 
-export default async function ArticleId({ params }: Props) {
-	const { slug } = await params;
+async function ArticleContent({ slug }: { slug: string }) {
 	const article = await getPostBySlug(slug);
 
-	if (!article) return notFound();
+	if (!article || !article.content_mdx) return notFound();
 
-	let PostContent: React.ElementType | null = null;
-	try {
-		const mdxModule = await import(`@/../content/articles/${slug}.mdx`);
-		PostContent = mdxModule.default;
-	} catch (e) {
-		return notFound();
-	}
+	const { content } = await compileMDX({
+		source: article.content_mdx,
+		options: {
+			mdxOptions: {
+				remarkPlugins: [remarkGfm],
+			},
+		},
+		components: useMDXComponents({}),
+	});
+
+	return (
+		<>
+			<div className="grid place-items-center gap-4 px-4">
+				<h1 className="px-4 text-xl font-bold">{article.title}</h1>
+				<div className="flex items-center justify-center space-x-2 text-sm text-zinc-500">
+					<p>編纂員: {article.name}</p>
+					<AuthorAvatar avatar={article.avatar ?? ""} name={article.name} size={20} />
+				</div>
+			</div>
+
+			<div className="mx-auto mt-10 px-4 text-sm sm:text-base max-w-none">
+				{content}
+			</div>
+
+			<ClapButton slug={slug} initialClaps={article.claps || 0} />
+		</>
+	);
+}
+
+export default async function ArticleId({ params }: Props) {
+	const { slug } = await params;
 
 	return (
 		<div className="space-y-6">
@@ -59,27 +85,13 @@ export default async function ArticleId({ params }: Props) {
 				<MoveLeft />
 			</Link>
 
-			<div className="grid place-items-center gap-4 px-4">
-				<h1 className="px-4 text-xl font-bold">{article.title}</h1>
-				<div className="flex items-center justify-center space-x-2 text-sm text-zinc-500">
-					<p>編纂員: {article.name}</p>
-					{article.avatar && (
-						<Image
-							src={article.avatar}
-							width={20}
-							height={20}
-							alt={article.name}
-							className="rounded-full"
-						/>
-					)}
-				</div>
-			</div>
-
-			<div className="mx-auto mt-10 px-4 text-sm sm:text-base max-w-none">
-				{PostContent && <PostContent />}
-			</div>
-
-			<ClapButton slug={slug} initialClaps={article.claps || 0} />
+			<Suspense
+				fallback={
+					<div className="px-4 text-center text-zinc-400">Loading...</div>
+				}
+			>
+				<ArticleContent slug={slug} />
+			</Suspense>
 		</div>
 	);
 }

@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { Suspense } from "react";
 
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
@@ -10,6 +11,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+	metadataBase: new URL(
+		process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+	),
 	title: { default: "Medium", template: "%s | Medium" },
 	description:
 		"A private media platform that shares passion, with null as the medium.",
@@ -35,7 +39,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body
 				className={`${geistMono.className} antialiased grid grid-rows-[1fr_auto] min-h-dvh max-w-screen-md w-full mx-auto p-4 relative`}
 			>
@@ -47,7 +51,9 @@ export default function RootLayout({
 				>
 					<main className="py-4">{children}</main>
 
-					<BottomNav />
+					<Suspense fallback={null}>
+						<BottomNav />
+					</Suspense>
 				</ThemeProvider>
 			</body>
 		</html>

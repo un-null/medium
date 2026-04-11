@@ -1,11 +1,27 @@
+import { ArticleCard } from "@/components/ArticleCard";
 import { getAllPostsMeta } from "@/lib/posts";
-import { Card, CardContent, CardFooter } from "@/shadcn/components/ui/card";
+import { Card, CardContent } from "@/shadcn/components/ui/card";
 import { ChevronRight } from "lucide-react";
-import Image from "next/image";
+import { Suspense } from "react";
 
-export default async function Home() {
+async function LatestArticles() {
 	const latestArticles = (await getAllPostsMeta()).slice(0, 3);
 
+	return (
+		<div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+			{latestArticles.map((article) => (
+				<ArticleCard
+					key={article.slug}
+					slug={article.slug}
+					title={article.title}
+					date={article.date}
+				/>
+			))}
+		</div>
+	);
+}
+
+export default function Home() {
 	return (
 		<div className="flex flex-col gap-8 px-4">
 			<div className="mt-4">
@@ -28,34 +44,6 @@ export default async function Home() {
 				</Card>
 			</a>
 
-			{/* <section className="my-8">
-				<h1 className="mb-2 text-center text-2xl">Advertisement</h1>
-				<p className="text-center text-zinc-400">- Rent For Free -</p>
-
-				<div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-					<Card className="aspect-square pt-0 bg-zinc-900/50">
-						<CardContent className="grid aspect-[4/3] place-items-center rounded-t-xl bg-zinc-950 text-zinc-400 hover:text-zinc-100">
-							<p className="mt-4 text-sm md:text-base">
-								<Paintbrush type="paint" />
-							</p>
-						</CardContent>
-						<CardFooter className="mt-3 flex items-center justify-center space-x-2 p-0 text-xs text-zinc-500 sm:mt-4 sm:text-sm">
-							Coming Soon
-						</CardFooter>
-					</Card>
-					<Card className="aspect-square pt-0 bg-zinc-900/50">
-						<CardContent className="grid aspect-[4/3] place-items-center rounded-t-xl bg-zinc-950 text-zinc-400 hover:text-zinc-100">
-							<p className="mt-4 text-sm md:text-base">
-								<Paintbrush type="paint" />
-							</p>
-						</CardContent>
-						<CardFooter className="mt-3 flex items-center justify-center space-x-2 p-0 text-xs text-zinc-500 sm:mt-4 sm:text-sm">
-							Coming Soon
-						</CardFooter>
-					</Card>
-				</div>
-			</section> */}
-
 			<section className="my-8">
 				<h1 className="mb-2 text-center text-2xl">Latest Articles</h1>
 				<a
@@ -65,29 +53,15 @@ export default async function Home() {
 					View All <ChevronRight size={16} />
 				</a>
 
-				<div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-					{latestArticles.map((article) => (
-						<Card key={article.slug} className="p-0 aspect-square">
-							<a href={`/article/${article.slug}`}>
-								<CardContent className="grid aspect-[4/3] place-items-center text-zinc-600 dark:text-zinc-400 hover:text-foreground dark:hover:text-foreground  dark:bg-zinc-950 rounded-t-xl border-b">
-									<p className="mt-4 text-sm md:text-base">{article.title}</p>
-								</CardContent>
-								<CardFooter className="flex items-center justify-center space-x-2 text-sm text-zinc-500 p-0 mt-3 sm:mt-4 cursor-default">
-									<p className="text-xs sm:text-sm">編纂員: {article?.name}</p>
-									{article.avatar && (
-										<Image
-											src={article.avatar}
-											width={16}
-											height={16}
-											alt={article.name}
-											className="rounded-full sm:w-5 sm:h-5"
-										/>
-									)}
-								</CardFooter>
-							</a>
-						</Card>
-					))}
-				</div>
+				<Suspense
+					fallback={
+						<div className="mt-6 text-center text-zinc-400 text-sm">
+							Loading...
+						</div>
+					}
+				>
+					<LatestArticles />
+				</Suspense>
 			</section>
 		</div>
 	);
