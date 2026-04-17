@@ -12,17 +12,18 @@ export function ArticleImage({ src, alt }: Props) {
 	const [loaded, setLoaded] = useState(false);
 
 	return (
-		<span className="block relative w-full aspect-video overflow-hidden rounded-lg my-6">
+		<span className="block relative w-full my-6">
 			{!loaded && (
-				<span className="absolute inset-0 skeleton-shimmer z-10" />
+				<span className="absolute inset-0 skeleton-shimmer rounded-lg z-10" />
 			)}
 			<Image
 				src={src}
 				alt={alt}
-				fill
-				sizes="(max-width: 768px) 100vw, 80vw"
+				width={0}
+				height={0}
+				sizes="100vw"
 				onLoad={() => setLoaded(true)}
-				className={`object-contain transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+				className={`w-full h-auto rounded-lg transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
 			/>
 		</span>
 	);

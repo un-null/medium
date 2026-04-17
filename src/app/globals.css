@@ -163,6 +163,25 @@
   animation: shimmer 1.5s infinite linear;
 }
 
+.prose img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.prose img[title="uploading"] {
+  opacity: 0.5;
+  filter: grayscale(100%) blur(2px);
+  animation: pulse-upload 1.5s infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse-upload {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0.3; }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

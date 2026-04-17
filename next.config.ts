@@ -7,9 +7,10 @@ const nextConfig: NextConfig = {
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: "*.r2.dev",
+				hostname: "images.is-be.zip",
 			},
 		],
+		unoptimized: true,
 	},
 	cacheComponents: true,
 };
