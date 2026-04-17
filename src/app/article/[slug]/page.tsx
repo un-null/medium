@@ -1,6 +1,6 @@
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { ClapButton } from "@/components/layout/clap-button";
-import { getAllPostsMeta, getPostBySlug } from "@/lib/posts";
+import { getPostBySlug } from "@/lib/posts";
 import { useMDXComponents } from "@/mdx-components";
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
@@ -34,12 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	};
 }
 
-export async function generateStaticParams() {
-	const posts = await getAllPostsMeta();
-	return posts.map((post) => ({ slug: post.slug }));
-}
-
 async function ArticleContent({ slug }: { slug: string }) {
+	"use cache";
 	const article = await getPostBySlug(slug);
 
 	if (!article || !article.content_mdx) return notFound();

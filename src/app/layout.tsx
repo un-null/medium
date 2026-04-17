@@ -49,7 +49,9 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<main className="py-4">{children}</main>
+					<main className="py-4">
+						<Suspense fallback={null}>{children}</Suspense>
+					</main>
 
 					<Suspense fallback={null}>
 						<BottomNav />

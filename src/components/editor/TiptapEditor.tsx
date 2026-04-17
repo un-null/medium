@@ -38,6 +38,7 @@ export default function TiptapEditor({
 	const [status, setStatus] = useState<"draft" | "published">(initialStatus);
 	const [saving, setSaving] = useState(false);
 	const [message, setMessage] = useState("");
+	const [uploadingImage, setUploadingImage] = useState(false);
 
 	const editor = useEditor({
 		immediatelyRender: false,
@@ -52,8 +53,7 @@ export default function TiptapEditor({
 		content: initialContent,
 		editorProps: {
 			attributes: {
-				class:
-					"prose prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
+				class: "prose dark:prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
 			},
 		},
 	});
@@ -61,16 +61,61 @@ export default function TiptapEditor({
 	const handleImageUpload = useCallback(
 		async (file: File) => {
 			if (!editor) return;
-			const { uploadUrl, fileUrl } = await getPresignedUrl(
-				file.name,
-				file.type,
-			);
-			await fetch(uploadUrl, {
-				method: "PUT",
-				body: file,
-				headers: { "Content-Type": file.type },
-			});
-			editor.chain().focus().setImage({ src: fileUrl, alt: file.name }).run();
+			setUploadingImage(true);
+
+			const tempUrl = URL.createObjectURL(file);
+			editor
+				.chain()
+				.focus()
+				.setImage({ src: tempUrl, alt: "Uploading...", title: "uploading" })
+				.run();
+
+			try {
+				const { uploadUrl, fileUrl } = await getPresignedUrl(
+					file.name,
+					file.type,
+				);
+				await fetch(uploadUrl, {
+					method: "PUT",
+					body: file,
+					headers: { "Content-Type": file.type },
+				});
+
+				await new Promise((resolve, reject) => {
+					const img = new window.Image();
+					img.onload = resolve;
+					img.onerror = reject;
+					img.src = fileUrl;
+				});
+
+				editor.state.doc.descendants((node, pos) => {
+					if (node.type.name === "image" && node.attrs.src === tempUrl) {
+						editor.commands.command(({ tr }) => {
+							tr.setNodeMarkup(pos, undefined, {
+								...node.attrs,
+								src: fileUrl,
+								alt: file.name,
+								title: null,
+							});
+							return true;
+						});
+					}
+				});
+			} catch (error) {
+				console.error("Image upload failed", error);
+				editor.state.doc.descendants((node, pos) => {
+					if (node.type.name === "image" && node.attrs.src === tempUrl) {
+						editor.commands.command(({ tr }) => {
+							tr.delete(pos, pos + node.nodeSize);
+							return true;
+						});
+					}
+				});
+				setMessage("Image upload failed");
+			} finally {
+				URL.revokeObjectURL(tempUrl);
+				setUploadingImage(false);
+			}
 		},
 		[editor],
 	);
@@ -80,8 +125,7 @@ export default function TiptapEditor({
 		editor.setOptions({
 			editorProps: {
 				attributes: {
-					class:
-						"prose prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
+					class: "prose dark:prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
 				},
 				handlePaste: (_view, event) => {
 					const items = event.clipboardData?.items;
@@ -142,14 +186,14 @@ export default function TiptapEditor({
 					<button
 						type="button"
 						onClick={() => editor?.chain().focus().toggleBold().run()}
-						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("bold") ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("bold") ? "bg-zinc-800 text-white dark:bg-zinc-600" : ""}`}
 					>
 						B
 					</button>
 					<button
 						type="button"
 						onClick={() => editor?.chain().focus().toggleItalic().run()}
-						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 italic ${editor?.isActive("italic") ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 italic ${editor?.isActive("italic") ? "bg-zinc-800 text-white dark:bg-zinc-600" : ""}`}
 					>
 						I
 					</button>
@@ -158,7 +202,7 @@ export default function TiptapEditor({
 						onClick={() =>
 							editor?.chain().focus().toggleHeading({ level: 2 }).run()
 						}
-						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("heading", { level: 2 }) ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("heading", { level: 2 }) ? "bg-zinc-800 text-white dark:bg-zinc-600" : ""}`}
 					>
 						H2
 					</button>
@@ -167,30 +211,31 @@ export default function TiptapEditor({
 						onClick={() =>
 							editor?.chain().focus().toggleHeading({ level: 3 }).run()
 						}
-						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("heading", { level: 3 }) ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("heading", { level: 3 }) ? "bg-zinc-800 text-white dark:bg-zinc-600" : ""}`}
 					>
 						H3
 					</button>
 					<button
 						type="button"
 						onClick={() => editor?.chain().focus().toggleBulletList().run()}
-						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("bulletList") ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("bulletList") ? "bg-zinc-800 text-white dark:bg-zinc-600" : ""}`}
 					>
 						List
 					</button>
 					<button
 						type="button"
 						onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("blockquote") ? "bg-zinc-700" : ""}`}
+						className={`px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${editor?.isActive("blockquote") ? "bg-zinc-800 text-white dark:bg-zinc-600" : ""}`}
 					>
 						Quote
 					</button>
-					<label className="px-2 cursor-pointer py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400">
-						Image
+					<label className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${uploadingImage ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}>
+						{uploadingImage ? "..." : "Image"}
 						<input
 							type="file"
 							accept="image/*"
 							className="hidden"
+							disabled={uploadingImage}
 							onChange={(e) => {
 								const file = e.target.files?.[0];
 								if (file) handleImageUpload(file);
