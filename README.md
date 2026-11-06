@@ -2,7 +2,7 @@
 
 A small private blog. A few writers publish long-form articles; readers can clap, not comment. It has a rich-text editor, drafts, publishing, and direct image uploads.
 
-**Live:** https://www.is-be.zip
+**Live:** [https://www.is-be.zip](https://www.is-be.zip)
 
 ![Home](docs/sc/home.png)
 
@@ -28,20 +28,22 @@ Authors and readers are on the left. Blue edges are the write and read paths: Ti
 
 ## Stack
 
-| Layer | Choice |
-| --- | --- |
-| App | Next.js 16 (App Router, React Server Components, Server Actions, `use cache`) |
-| UI | React 19, Tailwind CSS 4, shadcn/ui, next-themes |
-| Editor | Tiptap 3 with `tiptap-markdown` |
-| Content | `next-mdx-remote/rsc`, `remark-gfm` |
-| Data | Turso (libSQL), Drizzle ORM |
-| Auth | HMAC-SHA256 signed cookie (Web Crypto), bcryptjs |
-| Images | Cloudflare R2 with S3 presigned uploads |
-| Tooling | TypeScript, Biome, pnpm |
+
+| Layer   | Choice                                                                        |
+| ------- | ----------------------------------------------------------------------------- |
+| App     | Next.js 16 (App Router, React Server Components, Server Actions, `use cache`) |
+| UI      | React 19, Tailwind CSS 4, shadcn/ui, next-themes                              |
+| Editor  | Tiptap 3 with `tiptap-markdown`                                               |
+| Content | `next-mdx-remote/rsc`, `remark-gfm`                                           |
+| Data    | Turso (libSQL), Drizzle ORM                                                   |
+| Auth    | HMAC-SHA256 signed cookie (Web Crypto), bcryptjs                              |
+| Images  | Cloudflare R2 with S3 presigned uploads                                       |
+| Tooling | TypeScript, Biome, pnpm                                                       |
+
 
 ## Design decisions
 
-### Writes through Server Actions, reads through RSC
+### ① Writes through Server Actions, reads through RSC
 
 All writes are Server Actions: save, delete, publish, clap, login, and upload signing. Reads call Drizzle directly from server components, and public queries only return published posts.
 
@@ -49,13 +51,13 @@ This keeps the app in one deployable. The cost is no public API, which is fine b
 
 Article text is stored twice: `content_json` for the editor and `content_mdx` for the public page. The serializer keeps them in sync, but they can drift if a write skips the editor.
 
-### A hand-rolled HMAC session
+### ② A hand-rolled HMAC session
 
 Login checks a bcrypt password and sets a signed `${authorId}.${exp}.${signature}` cookie. The signature is HMAC-SHA256 over `EDITOR_SECRET`, and the token expires after 24 hours. Every protected action checks it again, so there is no session table.
 
 This keeps the app stateless and needs no auth framework, which fits a private blog with a few trusted writers. The cost is that tokens cannot be revoked one by one, and all authors share one key. It is not a general-purpose account system.
 
-### Presigned uploads to R2
+### ③ Presigned uploads to R2
 
 The editor asks a Server Action for an upload URL. The action checks the session, then signs a short-lived `PUT` for one object. The browser sends the file straight to R2 and puts the public URL in the Markdown.
 
@@ -63,13 +65,13 @@ Image bytes never pass through Next.js, so large files do not hit request limits
 
 The cost is that the bucket must be public, and there is no delete path or cleanup for unused images.
 
-### Turso and Drizzle
+### ④ Turso and Drizzle
 
 Turso's libSQL over HTTP works from serverless functions without a connection pool. Drizzle provides a typed schema and SQL-shaped queries with little runtime overhead.
 
 Schema changes are applied with `drizzle-kit push`. There are no migration files in the repository, so there is no migration history to review or roll back.
 
-### Compared with go-next
+### 　⑤ Compared with go-next
 
 [go-next](https://github.com/un-null/go-next) takes the other side of the same boundary: a Go API (Echo, sqlc, PostgreSQL) and a React Router SPA. The API is explicit and reusable, and the backend can be tested alone, at the cost of more code to keep in sync across two projects.
 
