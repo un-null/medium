@@ -8,9 +8,9 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Youtube from "@tiptap/extension-youtube";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Markdown, type MarkdownStorage } from "tiptap-markdown";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { Markdown, type MarkdownStorage } from "tiptap-markdown";
 
 type Props = {
 	id: string;
@@ -53,7 +53,8 @@ export default function TiptapEditor({
 		content: initialContent,
 		editorProps: {
 			attributes: {
-				class: "prose dark:prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
+				class:
+					"prose dark:prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
 			},
 		},
 	});
@@ -125,7 +126,8 @@ export default function TiptapEditor({
 		editor.setOptions({
 			editorProps: {
 				attributes: {
-					class: "prose dark:prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
+					class:
+						"prose dark:prose-invert max-w-none min-h-[60vh] px-4 py-4 outline-none",
 				},
 				handlePaste: (_view, event) => {
 					const items = event.clipboardData?.items;
@@ -229,11 +231,13 @@ export default function TiptapEditor({
 					>
 						Quote
 					</button>
-					<label className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${uploadingImage ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}>
+					<label
+						className={`px-2 py-1 text-xs rounded border border-zinc-700 hover:border-zinc-400 ${uploadingImage ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+					>
 						{uploadingImage ? "..." : "Image"}
 						<input
 							type="file"
-							accept="image/*"
+							accept="image/jpeg,image/png,image/webp,image/gif"
 							className="hidden"
 							disabled={uploadingImage}
 							onChange={(e) => {

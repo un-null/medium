@@ -1,43 +1,59 @@
-const SECRET = process.env.EDITOR_SECRET ?? "";
+const TOKEN_TTL_SECONDS = 60 * 60 * 24;
+const MIN_SECRET_LENGTH = 32;
+
+function getSecret(): string {
+	const secret = process.env.EDITOR_SECRET;
+	if (!secret || secret.length < MIN_SECRET_LENGTH) {
+		throw new Error(
+			`EDITOR_SECRET must be set to at least ${MIN_SECRET_LENGTH} characters`,
+		);
+	}
+	return secret;
+}
 
 async function getKey(): Promise<CryptoKey> {
 	const enc = new TextEncoder();
 	return crypto.subtle.importKey(
 		"raw",
-		enc.encode(SECRET),
+		enc.encode(getSecret()),
 		{ name: "HMAC", hash: "SHA-256" },
 		false,
 		["sign", "verify"],
 	);
 }
 
-export async function signToken(authorId: string): Promise<string> {
+async function sign(payload: string): Promise<string> {
 	const key = await getKey();
 	const enc = new TextEncoder();
-	const sig = await crypto.subtle.sign("HMAC", key, enc.encode(authorId));
-	const hex = Array.from(new Uint8Array(sig))
+	const sig = await crypto.subtle.sign("HMAC", key, enc.encode(payload));
+	return Array.from(new Uint8Array(sig))
 		.map((b) => b.toString(16).padStart(2, "0"))
 		.join("");
-	return `${authorId}.${hex}`;
+}
+
+export async function signToken(authorId: string): Promise<string> {
+	const exp = Math.floor(Date.now() / 1000) + TOKEN_TTL_SECONDS;
+	const payload = `${authorId}.${exp}`;
+	const sig = await sign(payload);
+	return `${payload}.${sig}`;
 }
 
 export async function verifyToken(token: string): Promise<string | null> {
-	const dot = token.lastIndexOf(".");
-	if (dot === -1) return null;
+	const sigDot = token.lastIndexOf(".");
+	if (sigDot === -1) return null;
 
-	const authorId = token.slice(0, dot);
-	const sigHex = token.slice(dot + 1);
+	const payload = token.slice(0, sigDot);
+	const sigHex = token.slice(sigDot + 1);
 
-	const key = await getKey();
-	const enc = new TextEncoder();
-	const expected = await crypto.subtle.sign(
-		"HMAC",
-		key,
-		enc.encode(authorId),
-	);
-	const expectedHex = Array.from(new Uint8Array(expected))
-		.map((b) => b.toString(16).padStart(2, "0"))
-		.join("");
+	const expDot = payload.lastIndexOf(".");
+	if (expDot === -1) return null;
+
+	const authorId = payload.slice(0, expDot);
+	const exp = Number(payload.slice(expDot + 1));
+	if (!authorId || !Number.isSafeInteger(exp)) return null;
+	if (exp <= Math.floor(Date.now() / 1000)) return null;
+
+	const expectedHex = await sign(payload);
 
 	// timing-safe compare
 	if (sigHex.length !== expectedHex.length) return null;
