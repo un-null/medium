@@ -43,36 +43,25 @@ Authors and readers are on the left. Blue edges are the write and read paths: Ti
 
 ### Writes through Server Actions, reads through RSC
 
-All mutations are Server Actions colocated with the UI: saving and deleting articles, publishing, claps, login, and presigning uploads. There are no route handlers and no separate API client.
+All writes are Server Actions: save, delete, publish, clap, login, and upload signing. Reads call Drizzle directly from server components, and public queries only return published posts.
 
-Reads call Drizzle directly from server components. `getAllPostsMeta` and `getPostBySlug` are wrapped in React `cache()` so a page can ask for the same data more than once without repeating the query. Both filter on `status = 'published'`, so drafts are only readable in the editor. The article body is rendered under `"use cache"`, and article writes invalidate it with `updateTag("articles")` plus `revalidatePath`.
+This keeps the app in one deployable. The cost is no public API, which is fine because the blog has one web client.
 
-Article content is stored twice: `content_json` is the editor's Tiptap document for round-tripping, and `content_mdx` is what the public page renders. The Markdown serializer keeps them aligned, but they can drift if a write bypasses the editor.
-
-The trade-off is a single deployable with no public API. Another client that needs the same data would need a new HTTP boundary.
+Article text is stored twice: `content_json` for the editor and `content_mdx` for the public page. The serializer keeps them in sync, but they can drift if a write skips the editor.
 
 ### A hand-rolled HMAC session
 
-Login looks up the author by username, compares the password with bcrypt, and signs the author id and an expiry with HMAC-SHA256 over `EDITOR_SECRET`. The cookie value is `${authorId}.${exp}.${signature}`; the cookie is `httpOnly`, `SameSite=Lax`, `Secure` in production, and expires after 24 hours.
+Login checks a bcrypt password and sets a signed `${authorId}.${exp}.${signature}` cookie. The signature is HMAC-SHA256 over `EDITOR_SECRET`, and the token expires after 24 hours. Every protected action checks it again, so there is no session table.
 
-Every protected action re-verifies the signature and rejects expired tokens, and the comparison is timing-safe. There is no session table, so the server keeps no per-session state.
-
-The trade-offs are deliberate and visible in the code:
-
-- Tokens carry `exp` but not `iat`. The signature rejects them 24 hours after login, but there is no server-side revocation: deleting an author or changing a password does not invalidate tokens that were already issued. Rotating `EDITOR_SECRET` ends all sessions.
-- All authors share one signing key. A leak allows anyone to mint a session for any author id.
-- `EDITOR_SECRET` is read once at module load. If it is missing or shorter than 32 characters, session operations throw instead of falling back to a weak key.
-- Login and claps have no rate limiting.
-
-This is enough for a private, invite-only blog with a few trusted writers. It is not a general-purpose account system: there is no signup, role model, password reset, or account management UI.
+This keeps the app stateless and needs no auth framework, which fits a private blog with a few trusted writers. The cost is that tokens cannot be revoked one by one, and all authors share one key. It is not a general-purpose account system.
 
 ### Presigned uploads to R2
 
-The editor asks a Server Action for an upload URL. The action checks the session, builds a random key under `articles/images/`, and signs a `PUT` valid for 300 seconds. The browser sends the file directly to R2, then puts the returned public URL into the Markdown.
+The editor asks a Server Action for an upload URL. The action checks the session, then signs a short-lived `PUT` for one object. The browser sends the file straight to R2 and puts the public URL in the Markdown.
 
-Image bytes never pass through the Next.js server, so uploads do not hit request-body limits or hold a serverless function open during the transfer. R2 credentials stay on the server; the client only sees a short-lived URL.
+Image bytes never pass through Next.js, so large files do not hit request limits or keep a function busy. R2 credentials stay on the server.
 
-The bucket is publicly readable, and there is no delete path or orphan cleanup. Uploads are restricted to JPEG, PNG, WebP, and GIF by content type; the client still supplies that type, so the bucket policy remains the final guard.
+The cost is that the bucket must be public, and there is no delete path or cleanup for unused images.
 
 ### Turso and Drizzle
 
@@ -82,11 +71,11 @@ Schema changes are applied with `drizzle-kit push`. There are no migration files
 
 ### Compared with go-next
 
-[go-next](https://github.com/un-null/go-next) takes the other side of the same boundary: a Go API (Echo, sqlc, PostgreSQL) and a React Router SPA. The HTTP API is explicit and reusable, and the backend can be tested on its own.
+[go-next](https://github.com/un-null/go-next) takes the other side of the same boundary: a Go API (Echo, sqlc, PostgreSQL) and a React Router SPA. The API is explicit and reusable, and the backend can be tested alone, at the cost of more code to keep in sync across two projects.
 
-medium keeps the boundary inside Next.js: Server Actions for writes, RSC for reads, and no standalone API. There is less glue to maintain, but there is no documented API for another client; mutations are coupled to this app's forms.
+medium keeps the boundary inside Next.js: Server Actions for writes, RSC for reads, no standalone API. There is less glue, but a second client such as a mobile app would need an API built from scratch.
 
-The two repositories are deliberately different answers to "where does the server boundary go", not two versions of the same design.
+They are two answers to "where does the server boundary go", not two versions of the same design.
 
 ## Running locally
 
