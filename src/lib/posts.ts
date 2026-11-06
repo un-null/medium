@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { articles, authors } from "@/lib/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { cache } from "react";
 
 export type PostMeta = {
@@ -54,7 +54,7 @@ export const getPostBySlug = cache(
 			})
 			.from(articles)
 			.innerJoin(authors, eq(articles.author_id, authors.id))
-			.where(eq(articles.slug, slug))
+			.where(and(eq(articles.slug, slug), eq(articles.status, "published")))
 			.limit(1);
 
 		const row = rows[0];

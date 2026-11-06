@@ -1,9 +1,18 @@
 "use server";
 
 import { verifyToken } from "@/lib/auth";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { cookies } from "next/headers";
+
+const ALLOWED_IMAGE_TYPES = {
+	"image/jpeg": "jpg",
+	"image/png": "png",
+	"image/webp": "webp",
+	"image/gif": "gif",
+} as const;
+
+type AllowedImageType = keyof typeof ALLOWED_IMAGE_TYPES;
 
 const s3 = new S3Client({
 	region: "auto",
@@ -15,7 +24,7 @@ const s3 = new S3Client({
 });
 
 export async function getPresignedUrl(
-	filename: string,
+	_filename: string,
 	contentType: string,
 ): Promise<{ uploadUrl: string; fileUrl: string }> {
 	const cookieStore = await cookies();
@@ -23,13 +32,16 @@ export async function getPresignedUrl(
 	const authorId = token ? await verifyToken(token) : null;
 	if (!authorId) throw new Error("Unauthorized");
 
-	const ext = filename.split(".").pop() ?? "bin";
+	const normalizedType = contentType.split(";")[0]?.trim().toLowerCase() ?? "";
+	const ext = ALLOWED_IMAGE_TYPES[normalizedType as AllowedImageType];
+	if (!ext) throw new Error("Unsupported image type");
+
 	const key = `articles/images/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
 	const command = new PutObjectCommand({
 		Bucket: process.env.R2_BUCKET_NAME,
 		Key: key,
-		ContentType: contentType,
+		ContentType: normalizedType,
 	});
 
 	const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
